@@ -1,16 +1,4 @@
-# What the hell do I call this monstrosity of a stack
-- There are so many "T"s and "S"s
-  - <ins>T</ins>ype<ins>S</ins>cript
-  - <ins>T</ins>an<ins>S</ins>tack <ins>S</ins>tart
-  - <ins>SST</ins>
-  - <ins>T</ins>aylor <ins>S</ins>teele 😏
-  - <ins>S</ins>hadcn & <ins>T</ins>ailwind
-  - Ruined by Better Auth & Drizzle, c'mon guys 🙂‍↔️
-- Potential Names
-  - Just the important ones are TypeScript, TanStack Start and SST, so TSTSSSST Stack?
-  - [TSST](https://www.youtube.com/watch?v=j6g3UoKxTI8)
-  - All the TS's create TSTSSSSTTSST. Rearrange them for TTTTTSSSSSSS. 5T7S.
-- The game could be how many T's and S's can you fit into the stack.
+# Getting Started
 
 # Features
 

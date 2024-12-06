@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/triple-slash-reference */
 /// <reference path="./.sst/platform/config.d.ts" />
-const name = "sstart";
+const name = "braid";
 export default $config({
   app(input) {
     return {
@@ -27,12 +27,23 @@ export default $config({
       ? new sst.aws.Vpc(`${name}-vpc`, { bastion: true, nat: "ec2" })
       : sst.aws.Vpc.get(`${name}-vpc`, "vpc-057d1174bade06382");
 
-    const database = isPermanentStage
-      ? new sst.aws.Postgres(`${name}-database`, { vpc: vpc as sst.aws.Vpc, proxy: true })
-      : sst.aws.Postgres.get(`${name}-database`, {
-          id: `${name}-dev-databaseinstance`,
-          proxyId: `${name}-dev-databaseproxy`,
-        });
+    const database =
+      isPermanentStage || $dev
+        ? new sst.aws.Postgres(`${name}-database`, {
+            vpc,
+            proxy: true,
+            dev: {
+              database: "braid",
+              host: "localhost",
+              port: 5432,
+              username: "postgres",
+              password: "postgres",
+            },
+          })
+        : sst.aws.Postgres.get(`${name}-database`, {
+            id: `${name}-dev-databaseinstance`,
+            proxyId: `${name}-dev-databaseproxy`,
+          });
 
     const webApp = new sst.aws.TanstackStart(`${name}-app`, {
       link: [database],
@@ -59,6 +70,13 @@ export default $config({
       link: [database],
       dev: {
         command: "pnpm db:studio",
+        autostart: true,
+      },
+    });
+
+    new sst.x.DevCommand("Compose", {
+      dev: {
+        command: "docker compose up",
         autostart: true,
       },
     });
