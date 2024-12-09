@@ -8,11 +8,11 @@ export const schema = {
 };
 
 const pool = new pg.Pool({
-  host: Resource.TSSDatabase.host,
-  port: Resource.TSSDatabase.port,
-  user: Resource.TSSDatabase.username,
-  password: Resource.TSSDatabase.password,
-  database: Resource.TSSDatabase.database,
+  host: Resource.Database.host,
+  port: Resource.Database.port,
+  user: Resource.Database.username,
+  password: Resource.Database.password,
+  database: Resource.Database.database,
 });
 
 export const db = drizzle(pool, { schema });

@@ -6,10 +6,10 @@ export default defineConfig({
   schema: ["./app/**/*.sql.ts"],
   out: "./app/database/migrations/",
   dbCredentials: {
-    host: Resource.braidDatabase.host,
-    port: Resource.braidDatabase.port,
-    user: Resource.braidDatabase.username,
-    password: Resource.braidDatabase.password,
-    database: Resource.braidDatabase.database,
+    host: Resource.Database.host,
+    port: Resource.Database.port,
+    user: Resource.Database.username,
+    password: Resource.Database.password,
+    database: Resource.Database.database,
   },
 });

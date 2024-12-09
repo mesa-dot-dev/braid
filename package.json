@@ -4,7 +4,7 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "auth": "aws sso login --sso-session=mesa",
+    "sso": "aws sso login --sso-session=mesa",
     "build": "vinxi build",
     "db:generate": "sst shell drizzle-kit generate",
     "db:migrate": "sst shell drizzle-kit migrate",

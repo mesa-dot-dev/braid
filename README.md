@@ -1,5 +1,34 @@
 # Getting Started
 
+1. Get added to AWS account
+2. Add the following to ~/.aws/config
+
+```
+[sso-session mesa]
+sso_start_url = https://mesadev.awsapps.com/start
+sso_region = us-east-1
+
+[profile mesa-development]
+sso_session = mesa
+sso_account_id = 515966537449
+sso_role_name = AdministratorAccess
+region = us-east-1
+
+[profile mesa-production]
+sso_session = mesa
+sso_account_id = 050752607398
+sso_role_name = AdministratorAccess
+region = us-east-1
+```
+
+3. Install Dependencies and start service
+
+```
+pnpm i
+pnpm run sso
+pnpm run dev
+```
+
 # Features
 
 - All TypeScript
@@ -10,9 +39,11 @@
 - PR Environments that share Development Database
 
 # Stack and Decisions
+
 What was chosen and why
 
 ## SST
+
 SST is the real star of the show here. This project was to demo it, learn more about it, and try it in a way that's as close to an actual production/enterprise environment as possible. It's worked great so far, and I've become very optimistic about its future and potential--especially in the JavaScript space. Here's why:
 
 - Like other solutions built on top of AWS, SST has successfully recognized that the pain of AWS goes deeper than horrible dashboards. True pain is correctly setting up services you may be unfamiliar with and creating a predictable way for them to communicate with each other. SST does this elegantly without the 400% upcharge from other solutions.
@@ -26,13 +57,13 @@ No alternatives considered, and I hope my job doesn't make me use Terraform inst
 
 ## TanStack Start
 
-Honestly, I just wanted to try this out, and it's not too shabby at all, even in its alpha state. It's not my [*personally* favorite file router](https://github.com/TanStack/router/discussions/2624), but having automatic intellisense on links and other navigation functions is very nice. The real standout here is the combination of Vite + Nitro + Vinxi. If TSS even becomes moderately well received, that'll be a big proof point for the [Vinxi and SolidStart teams](https://www.solidjs.com/blog/solid-start-the-shape-frameworks-to-come). Even before I started working on this, there was already an undocumented SST TanStack Start component that looks like it basically copied the SolidStart SST component. Showing the power of the Nitro + Vinxi stack there.
+Honestly, I just wanted to try this out, and it's not too shabby at all, even in its alpha state. It's not my [_personally_ favorite file router](https://github.com/TanStack/router/discussions/2624), but having automatic intellisense on links and other navigation functions is very nice. The real standout here is the combination of Vite + Nitro + Vinxi. If TSS even becomes moderately well received, that'll be a big proof point for the [Vinxi and SolidStart teams](https://www.solidjs.com/blog/solid-start-the-shape-frameworks-to-come). Even before I started working on this, there was already an undocumented SST TanStack Start component that looks like it basically copied the SolidStart SST component. Showing the power of the Nitro + Vinxi stack there.
 
 The router is pretty nice, the data fetching is good, albeit slightly hard to wrangle with the buffet of options when you add in Query, it's in a nice place for alpha.
 
 ### Alternatives worth Considering
 
-NextJS - SST clearly has the best way to [self host Next](https://opennext.js.org/), and I personally really do like the data-fetching + streaming + layout + error story when creating new routes and pages. I've grown to dislike how much it obfuscates from you in the name of ease-of-use, and much prefer Solid Start's and TanStack Start's simplicity. But if I'm gonna be so incredibly real with you all, my biggest reason for not using it is that the DevX in the Vite ecosystem is so, *so* much better than Webpack. Dev server is better, plugins are better, it's just better.
+NextJS - SST clearly has the best way to [self host Next](https://opennext.js.org/), and I personally really do like the data-fetching + streaming + layout + error story when creating new routes and pages. I've grown to dislike how much it obfuscates from you in the name of ease-of-use, and much prefer Solid Start's and TanStack Start's simplicity. But if I'm gonna be so incredibly real with you all, my biggest reason for not using it is that the DevX in the Vite ecosystem is so, _so_ much better than Webpack. Dev server is better, plugins are better, it's just better.
 
 Remix - Remix + Vite is dope, don't use Remix without Vite in 2024 and beyond. I personally like other solutions more, but if you've used and like Remix, go for it. Looking forward to seeing the React Router merge and what they do with RSCs.
 
@@ -74,9 +105,10 @@ At my job we have self hosted runners with better I/O than the free ones on gith
 
 ### Alternatives worth considering
 
-SST Console - The enterprise world can be cruel. It's often easier to give existing business partners $10,000 than it is to give new ones $0.10. Any paid service was off the table for this specific project. BUT, if you can you should use the console, it's a great resource and runs on CodeBuild. That said, viewing resources and function invocations has never worked for me *personally*, but I chalk it up to me doing something stupid and setting it up wrong. There still might be some work needed here, but I wish I could use it.
+SST Console - The enterprise world can be cruel. It's often easier to give existing business partners $10,000 than it is to give new ones $0.10. Any paid service was off the table for this specific project. BUT, if you can you should use the console, it's a great resource and runs on CodeBuild. That said, viewing resources and function invocations has never worked for me _personally_, but I chalk it up to me doing something stupid and setting it up wrong. There still might be some work needed here, but I wish I could use it.
 
 # Checklist
+
 - ✅ Tanstack Start
 - ✅ Tailwind
 - ✅ Shadcn UI
@@ -88,4 +120,5 @@ SST Console - The enterprise world can be cruel. It's often easier to give exist
 - ✅ Drizzle & Prod Migrations in CI
 
 # Wishlist
+
 - SST & VPCs work without `sudo`
