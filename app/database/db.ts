@@ -1,11 +1,11 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import { Resource } from "sst";
-import * as statusMessageSchema from "./status-message.sql";
+import * as schema from "./schema.sql";
 
-export const schema = {
-  ...statusMessageSchema,
-};
+// export const schema = {
+//   ...statusMessageSchema,
+// };
 
 const pool = new pg.Pool({
   host: Resource.Database.host,
