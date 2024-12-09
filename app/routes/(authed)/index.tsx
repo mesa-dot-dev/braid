@@ -19,7 +19,7 @@ export const Route = createFileRoute("/(authed)/")({
     if (!context.user) throw new Error("Not authenticated");
   },
   onError: (error) => {
-    if (error.message === "Not authenticated") throw redirect({ to: "/auth/signin" });
+    if (error.message === "Not authenticated") throw redirect({ to: "/signin" });
 
     throw error;
   },

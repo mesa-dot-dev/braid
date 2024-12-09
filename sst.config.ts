@@ -20,6 +20,14 @@ export default $config({
   },
   async run() {
     const isPermanentStage = $app.stage === "production" || $app.stage === "development";
+    // const workOSClientId = new sst.Secret(`WorkOSClientId`);
+    // const workOSApiKey = new sst.Secret(`WorkOSApiKey`);
+    const clerkSecretKey = new sst.Secret(`ClerkSecretKey`);
+    const config = new sst.Linkable("Config", {
+      properties: {
+        VITE_CLERK_PUBLISHABLE_KEY: "pk_test_Y29udGVudC1tdWxlLTI4LmNsZXJrLmFjY291bnRzLmRldiQ",
+      },
+    });
 
     const vpc = isPermanentStage
       ? new sst.aws.Vpc(`VPC`, { bastion: true, nat: "ec2" })
@@ -44,7 +52,7 @@ export default $config({
           });
 
     const webApp = new sst.aws.TanstackStart(`Web`, {
-      link: [database],
+      link: [database, clerkSecretKey, config],
       vpc,
       dev: { command: "pnpm run dev:app" },
     });

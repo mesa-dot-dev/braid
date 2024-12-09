@@ -21,6 +21,7 @@
     "node": "22"
   },
   "dependencies": {
+    "@clerk/tanstack-start": "^0.6.3",
     "@fontsource-variable/dm-sans": "^5.1.0",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "^1.2.1",

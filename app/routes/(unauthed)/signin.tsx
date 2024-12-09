@@ -1,3 +1,4 @@
+import { SignIn } from "@clerk/tanstack-start";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(unauthed)/signin")({
@@ -14,8 +15,8 @@ export const Route = createFileRoute("/(unauthed)/signin")({
 
 function RouteComponent() {
   return (
-    <>
-      <Link to="">Home</Link>
-    </>
+    <div className="flex h-screen flex-col items-center justify-center">
+      <SignIn />
+    </div>
   );
 }

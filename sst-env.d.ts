@@ -6,6 +6,14 @@ import "sst"
 export {}
 declare module "sst" {
   export interface Resource {
+    "ClerkSecretKey": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "Config": {
+      "VITE_CLERK_PUBLISHABLE_KEY": string
+      "type": "sst.sst.Linkable"
+    }
     "Database": {
       "database": string
       "host": string

@@ -1,17 +1,17 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, Outlet, ScrollRestoration } from "@tanstack/react-router";
 import { createServerFn, Meta, Scripts } from "@tanstack/start";
-import * as React from "react";
 import { getWebRequest } from "vinxi/http";
 import appCss from "@/app.css?url";
+import { ClerkProvider } from "@clerk/tanstack-start";
+import { getAuth } from "@clerk/tanstack-start/server";
 
 const getUser = createServerFn({ method: "GET" }).handler(async () => {
-  const { headers } = getWebRequest();
-  const session = null;
+  const { userId } = await getAuth(getWebRequest());
 
-  if (!session) return null;
+  if (!userId) return null;
 
-  // return session.user;
+  return userId;
 });
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
@@ -30,24 +30,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   component: RootComponent,
   links: () => [{ rel: "stylesheet", href: appCss }],
   beforeLoad: async () => {
-    return { undefined };
-    // const user = await getUser();
+    const user = await getUser();
 
-    // return { user };
+    return { user };
   },
 });
 
 function RootComponent() {
   return (
-    <html>
-      <head>
-        <Meta />
-      </head>
-      <body>
-        <Outlet />
-        <ScrollRestoration />
-        <Scripts />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html>
+        <head>
+          <Meta />
+        </head>
+        <body>
+          <Outlet />
+          <ScrollRestoration />
+          <Scripts />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
