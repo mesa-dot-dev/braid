@@ -20,6 +20,7 @@ export abstract class Product implements IProduct {
     const availableServiceNames = services.map((service) => service.name);
 
     const prompt = `Given this GitHub status message title: "${message.title}"
+      And this content: "${message.content}"
       And this list of available services: ${availableServiceNames.join(", ")}
       Please return only the names of services that are likely affected by this status message.
       Return the response as a JSON array of strings.`;
