@@ -1,4 +1,4 @@
-import { text, pgTable, timestamp } from "drizzle-orm/pg-core";
+import { text, pgTable, timestamp, jsonb } from "drizzle-orm/pg-core";
 
 export const StatusMessageTable = pgTable("status_messages", {
   guid: text("guid").primaryKey(),
@@ -6,5 +6,5 @@ export const StatusMessageTable = pgTable("status_messages", {
   content: text("content").notNull(),
   pubDate: timestamp("pubDate", { mode: "date" }).notNull(),
   product: text("product").notNull(),
-  affectedServices: text("affectedServices").notNull(),
+  affectedServices: jsonb("affectedServices").$type<string[]>().notNull().default([]),
 });
