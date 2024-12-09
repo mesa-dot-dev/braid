@@ -12,5 +12,23 @@ export default defineConfig({
         projects: ["./tsconfig.json"],
       }),
     ],
+    test: {
+      globals: true,
+      environment: "node",
+      alias: {
+        "@": "/app",
+      },
+      coverage: {
+        reporter: ["text", "json", "html"],
+      },
+      exclude: [
+        ".env",
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/cypress/**",
+        "**/.{idea,git,cache,output,temp}/**",
+        "**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*",
+      ],
+    },
   },
 });

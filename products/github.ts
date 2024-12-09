@@ -1,5 +1,5 @@
 import { ClassifiedMessage, IService, RSSFeed, StatusMessage } from "@/lib/interfaces";
-import { Product } from "@/lib/product";
+import { Product } from "../app/lib/product";
 import Parser from "rss-parser";
 
 export class GitHub extends Product {

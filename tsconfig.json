@@ -1,5 +1,5 @@
 {
-  "include": ["**/*.ts", "**/*.tsx", "tailwind.config.ts"],
+  "include": ["**/*.ts", "**/*.tsx", "tailwind.config.ts", "tests/**/*"],
   "compilerOptions": {
     "strict": true,
     "jsx": "react-jsx",
@@ -11,6 +11,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["app/*"]
-    }
+    },
+    "types": ["node"]
   }
 }

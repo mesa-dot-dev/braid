@@ -14,7 +14,9 @@
     "dev": "sst dev",
     "lint": "eslint --max-warnings=0",
     "sst": "sst",
-    "start": "vinxi start"
+    "start": "vinxi start",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "packageManager": "pnpm@9.12.0",
   "engines": {
@@ -91,6 +93,7 @@
     "@tanstack/eslint-plugin-router": "^1.81.9",
     "@tanstack/router-devtools": "^1.87.1",
     "@types/eslint__js": "^8.42.3",
+    "@types/node": "^22.10.1",
     "@types/pg": "^8.11.10",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
@@ -102,7 +105,8 @@
     "tailwindcss": "^3.4.15",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.14.0",
-    "vite-tsconfig-paths": "^5.1.2"
+    "vite-tsconfig-paths": "^5.1.2",
+    "vitest": "^2.1.8"
   },
   "pnpm": {
     "overrides": {
