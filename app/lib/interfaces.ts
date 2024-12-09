@@ -65,5 +65,10 @@ export abstract class Product implements IProduct {
 
   abstract getServices(): Promise<IService[]>;
   abstract getFeed(): Promise<StatusMessage[]>;
-  abstract classifyMessage(message: StatusMessage): Promise<ClassifiedMessage>;
+  
+  async classifyMessage(message: StatusMessage): Promise<ClassifiedMessage> {
+    const services = await this.getServices();
+    const availableServiceNames = services.map(service => service.name);
+    return createClassifiedMessage(message, availableServiceNames);
+  }
 }
