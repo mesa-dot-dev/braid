@@ -1,14 +1,39 @@
+import { eq } from "drizzle-orm";
+import { db } from "@/database/db";
+import { StatusMessageTable } from "@/database/schema.sql";
 import { ClassifiedMessage, IService, StatusMessage } from "./interfaces";
+import { desc } from "drizzle-orm";
+import { IProductFeed } from "./interfaces";
 
-import { IProduct } from "./interfaces";
-
-export abstract class Product implements IProduct {
+export abstract class ProductFeed implements IProductFeed {
   abstract readonly name: string;
   abstract readonly displayName: string;
   abstract readonly logo: string;
 
   abstract getServices(): Promise<IService[]>;
   abstract getFeed(): Promise<StatusMessage[]>;
+
+  async refreshStatusMessages(): Promise<ClassifiedMessage[]> {
+    const latestMessage = await db
+      .select()
+      .from(StatusMessageTable)
+      .where(eq(StatusMessageTable.product, this.name))
+      .orderBy(desc(StatusMessageTable.pubDate))
+      .limit(1)
+      .then((r) => r[0]);
+
+    const messages = await this.getFeed();
+    if (messages.length === 0) return [];
+
+    const latestMessages = latestMessage
+      ? messages.filter((message) => message.pubDate > latestMessage.pubDate)
+      : messages;
+
+    const classifiedMessages = await Promise.all(latestMessages.map(this.classifyMessage));
+    await db.insert(StatusMessageTable).values(classifiedMessages);
+
+    return classifiedMessages;
+  }
 
   async classifyMessage(message: StatusMessage): Promise<ClassifiedMessage> {
     const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY;
