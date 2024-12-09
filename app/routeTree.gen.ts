@@ -15,6 +15,8 @@ import { Route as SignoutImport } from './routes/signout'
 import { Route as authedIndexImport } from './routes/(authed)/index'
 import { Route as unauthedSignupImport } from './routes/(unauthed)/signup'
 import { Route as unauthedSigninImport } from './routes/(unauthed)/signin'
+import { Route as authedFeedImport } from './routes/(authed)/feed'
+import { Route as authedConfigImport } from './routes/(authed)/config'
 import { Route as authedDashboardIndexImport } from './routes/(authed)/dashboard.index'
 import { Route as authedDashboardUsersImport } from './routes/(authed)/dashboard.users'
 import { Route as authedDashboardTasksImport } from './routes/(authed)/dashboard.tasks'
@@ -45,6 +47,18 @@ const unauthedSigninRoute = unauthedSigninImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const authedFeedRoute = authedFeedImport.update({
+  id: '/(authed)/feed',
+  path: '/feed',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const authedConfigRoute = authedConfigImport.update({
+  id: '/(authed)/config',
+  path: '/config',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const authedDashboardIndexRoute = authedDashboardIndexImport.update({
   id: '/(authed)/dashboard/',
   path: '/dashboard/',
@@ -72,6 +86,20 @@ declare module '@tanstack/react-router' {
       path: '/signout'
       fullPath: '/signout'
       preLoaderRoute: typeof SignoutImport
+      parentRoute: typeof rootRoute
+    }
+    '/(authed)/config': {
+      id: '/(authed)/config'
+      path: '/config'
+      fullPath: '/config'
+      preLoaderRoute: typeof authedConfigImport
+      parentRoute: typeof rootRoute
+    }
+    '/(authed)/feed': {
+      id: '/(authed)/feed'
+      path: '/feed'
+      fullPath: '/feed'
+      preLoaderRoute: typeof authedFeedImport
       parentRoute: typeof rootRoute
     }
     '/(unauthed)/signin': {
@@ -123,6 +151,8 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/signout': typeof SignoutRoute
+  '/config': typeof authedConfigRoute
+  '/feed': typeof authedFeedRoute
   '/signin': typeof unauthedSigninRoute
   '/signup': typeof unauthedSignupRoute
   '/': typeof authedIndexRoute
@@ -133,6 +163,8 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/signout': typeof SignoutRoute
+  '/config': typeof authedConfigRoute
+  '/feed': typeof authedFeedRoute
   '/signin': typeof unauthedSigninRoute
   '/signup': typeof unauthedSignupRoute
   '/': typeof authedIndexRoute
@@ -144,6 +176,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/signout': typeof SignoutRoute
+  '/(authed)/config': typeof authedConfigRoute
+  '/(authed)/feed': typeof authedFeedRoute
   '/(unauthed)/signin': typeof unauthedSigninRoute
   '/(unauthed)/signup': typeof unauthedSignupRoute
   '/(authed)/': typeof authedIndexRoute
@@ -156,6 +190,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/signout'
+    | '/config'
+    | '/feed'
     | '/signin'
     | '/signup'
     | '/'
@@ -165,6 +201,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/signout'
+    | '/config'
+    | '/feed'
     | '/signin'
     | '/signup'
     | '/'
@@ -174,6 +212,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/signout'
+    | '/(authed)/config'
+    | '/(authed)/feed'
     | '/(unauthed)/signin'
     | '/(unauthed)/signup'
     | '/(authed)/'
@@ -185,6 +225,8 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   SignoutRoute: typeof SignoutRoute
+  authedConfigRoute: typeof authedConfigRoute
+  authedFeedRoute: typeof authedFeedRoute
   unauthedSigninRoute: typeof unauthedSigninRoute
   unauthedSignupRoute: typeof unauthedSignupRoute
   authedIndexRoute: typeof authedIndexRoute
@@ -195,6 +237,8 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   SignoutRoute: SignoutRoute,
+  authedConfigRoute: authedConfigRoute,
+  authedFeedRoute: authedFeedRoute,
   unauthedSigninRoute: unauthedSigninRoute,
   unauthedSignupRoute: unauthedSignupRoute,
   authedIndexRoute: authedIndexRoute,
@@ -214,6 +258,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/signout",
+        "/(authed)/config",
+        "/(authed)/feed",
         "/(unauthed)/signin",
         "/(unauthed)/signup",
         "/(authed)/",
@@ -224,6 +270,12 @@ export const routeTree = rootRoute
     },
     "/signout": {
       "filePath": "signout.tsx"
+    },
+    "/(authed)/config": {
+      "filePath": "(authed)/config.tsx"
+    },
+    "/(authed)/feed": {
+      "filePath": "(authed)/feed.tsx"
     },
     "/(unauthed)/signin": {
       "filePath": "(unauthed)/signin.tsx"
