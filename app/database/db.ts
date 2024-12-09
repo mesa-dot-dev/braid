@@ -1,10 +1,10 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import { Resource } from "sst";
-import * as todoSchema from "./todo.sql";
+import * as statusMessageSchema from "./status-message";
 
 export const schema = {
-  ...todoSchema,
+  ...statusMessageSchema,
 };
 
 const pool = new pg.Pool({

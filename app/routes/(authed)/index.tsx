@@ -16,7 +16,7 @@ export const Route = createFileRoute("/(authed)/")({
   component: RouteComponent,
   loader: () => ({ breadcrumb: "Dashboard" }),
   beforeLoad: ({ context }) => {
-    if (!context.user) throw new Error("Not authenticated");
+    // if (!context.user) throw new Error("Not authenticated");
   },
   onError: (error) => {
     if (error.message === "Not authenticated") throw redirect({ to: "/signin" });

@@ -9,7 +9,7 @@ const signout = createServerFn({ method: "POST" }).handler(async () => {
 
   deleteCookie("better-auth.session_token", { path: "/" });
 
-  throw redirect({ to: "/auth/signin" });
+  throw redirect({ to: "/signin" });
 });
 
 export const Route = createFileRoute("/signout")({

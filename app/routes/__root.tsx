@@ -6,13 +6,13 @@ import appCss from "@/app.css?url";
 import { ClerkProvider } from "@clerk/tanstack-start";
 import { getAuth } from "@clerk/tanstack-start/server";
 
-const getUser = createServerFn({ method: "GET" }).handler(async () => {
-  const { userId } = await getAuth(getWebRequest());
+// const getUser = createServerFn({ method: "GET" }).handler(async () => {
+//   const { userId } = await getAuth(getWebRequest());
 
-  if (!userId) return null;
+//   if (!userId) return null;
 
-  return userId;
-});
+//   return userId;
+// });
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   meta: () => [
@@ -30,9 +30,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   component: RootComponent,
   links: () => [{ rel: "stylesheet", href: appCss }],
   beforeLoad: async () => {
-    const user = await getUser();
-
-    return { user };
+    // const user = await getUser();
+    // return { user };
   },
 });
 
