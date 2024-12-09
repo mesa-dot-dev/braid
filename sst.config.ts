@@ -57,9 +57,17 @@ export default $config({
       dev: { command: "pnpm run dev:app" },
     });
 
+    const runner = new sst.aws.Cron("StatusRunner", {
+      job: {
+        handler: "app/functions/run.ts",
+        link: [database],
+      },
+      schedule: "rate(1 minute)",
+    });
+
     if ($app.stage === "production") {
       const databasePush = new sst.aws.Function(`DatabasePush`, {
-        handler: "app/database/database-push.databasePush",
+        handler: "app/functions/database-push.handler",
         link: [database],
         vpc,
       });
