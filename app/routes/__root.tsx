@@ -30,9 +30,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   component: RootComponent,
   links: () => [{ rel: "stylesheet", href: appCss }],
   beforeLoad: async () => {
-    const user = await getUser();
+    return { undefined };
+    // const user = await getUser();
 
-    return { user };
+    // return { user };
   },
 });
 

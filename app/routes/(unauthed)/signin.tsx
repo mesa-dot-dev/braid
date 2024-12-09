@@ -1,12 +1,12 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/auth/signin")({
+export const Route = createFileRoute("/(unauthed)/signin")({
   component: RouteComponent,
   beforeLoad: ({ context }) => {
     if (context.user) throw new Error("Already authenticated");
   },
   onError: (error) => {
-    if (error.message === "Already authenticated") throw redirect({ to: "/dashboard" });
+    if (error.message === "Already authenticated") throw redirect({ to: "/" });
 
     throw error;
   },

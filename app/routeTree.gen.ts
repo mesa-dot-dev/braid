@@ -8,31 +8,18 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as SignoutImport } from './routes/signout'
-import { Route as AuthedImport } from './routes/_authed'
-import { Route as AuthSignupImport } from './routes/auth/signup'
-import { Route as AuthSigninImport } from './routes/auth/signin'
-import { Route as AuthAuthImport } from './routes/auth/_auth'
+import { Route as authedIndexImport } from './routes/(authed)/index'
+import { Route as unauthedSignupImport } from './routes/(unauthed)/signup'
+import { Route as unauthedSigninImport } from './routes/(unauthed)/signin'
 import { Route as authedDashboardIndexImport } from './routes/(authed)/dashboard.index'
 import { Route as authedDashboardUsersImport } from './routes/(authed)/dashboard.users'
 import { Route as authedDashboardTasksImport } from './routes/(authed)/dashboard.tasks'
 
-// Create Virtual Routes
-
-const AuthImport = createFileRoute('/auth')()
-
 // Create/Update Routes
-
-const AuthRoute = AuthImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const SignoutRoute = SignoutImport.update({
   id: '/signout',
@@ -40,26 +27,22 @@ const SignoutRoute = SignoutImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthedRoute = AuthedImport.update({
-  id: '/_authed',
+const authedIndexRoute = authedIndexImport.update({
+  id: '/(authed)/',
+  path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthSignupRoute = AuthSignupImport.update({
-  id: '/signup',
+const unauthedSignupRoute = unauthedSignupImport.update({
+  id: '/(unauthed)/signup',
   path: '/signup',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => rootRoute,
 } as any)
 
-const AuthSigninRoute = AuthSigninImport.update({
-  id: '/signin',
+const unauthedSigninRoute = unauthedSigninImport.update({
+  id: '/(unauthed)/signin',
   path: '/signin',
-  getParentRoute: () => AuthRoute,
-} as any)
-
-const AuthAuthRoute = AuthAuthImport.update({
-  id: '/_auth',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => rootRoute,
 } as any)
 
 const authedDashboardIndexRoute = authedDashboardIndexImport.update({
@@ -84,13 +67,6 @@ const authedDashboardTasksRoute = authedDashboardTasksImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_authed': {
-      id: '/_authed'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthedImport
-      parentRoute: typeof rootRoute
-    }
     '/signout': {
       id: '/signout'
       path: '/signout'
@@ -98,33 +74,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignoutImport
       parentRoute: typeof rootRoute
     }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthImport
+    '/(unauthed)/signin': {
+      id: '/(unauthed)/signin'
+      path: '/signin'
+      fullPath: '/signin'
+      preLoaderRoute: typeof unauthedSigninImport
       parentRoute: typeof rootRoute
     }
-    '/auth/_auth': {
-      id: '/auth/_auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthAuthImport
-      parentRoute: typeof AuthRoute
-    }
-    '/auth/signin': {
-      id: '/auth/signin'
-      path: '/signin'
-      fullPath: '/auth/signin'
-      preLoaderRoute: typeof AuthSigninImport
-      parentRoute: typeof AuthImport
-    }
-    '/auth/signup': {
-      id: '/auth/signup'
+    '/(unauthed)/signup': {
+      id: '/(unauthed)/signup'
       path: '/signup'
-      fullPath: '/auth/signup'
-      preLoaderRoute: typeof AuthSignupImport
-      parentRoute: typeof AuthImport
+      fullPath: '/signup'
+      preLoaderRoute: typeof unauthedSignupImport
+      parentRoute: typeof rootRoute
+    }
+    '/(authed)/': {
+      id: '/(authed)/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof authedIndexImport
+      parentRoute: typeof rootRoute
     }
     '/(authed)/dashboard/tasks': {
       id: '/(authed)/dashboard/tasks'
@@ -152,37 +121,21 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-interface AuthRouteChildren {
-  AuthAuthRoute: typeof AuthAuthRoute
-  AuthSigninRoute: typeof AuthSigninRoute
-  AuthSignupRoute: typeof AuthSignupRoute
-}
-
-const AuthRouteChildren: AuthRouteChildren = {
-  AuthAuthRoute: AuthAuthRoute,
-  AuthSigninRoute: AuthSigninRoute,
-  AuthSignupRoute: AuthSignupRoute,
-}
-
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
-
 export interface FileRoutesByFullPath {
-  '': typeof AuthedRoute
   '/signout': typeof SignoutRoute
-  '/auth': typeof AuthAuthRoute
-  '/auth/signin': typeof AuthSigninRoute
-  '/auth/signup': typeof AuthSignupRoute
+  '/signin': typeof unauthedSigninRoute
+  '/signup': typeof unauthedSignupRoute
+  '/': typeof authedIndexRoute
   '/dashboard/tasks': typeof authedDashboardTasksRoute
   '/dashboard/users': typeof authedDashboardUsersRoute
   '/dashboard': typeof authedDashboardIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '': typeof AuthedRoute
   '/signout': typeof SignoutRoute
-  '/auth': typeof AuthAuthRoute
-  '/auth/signin': typeof AuthSigninRoute
-  '/auth/signup': typeof AuthSignupRoute
+  '/signin': typeof unauthedSigninRoute
+  '/signup': typeof unauthedSignupRoute
+  '/': typeof authedIndexRoute
   '/dashboard/tasks': typeof authedDashboardTasksRoute
   '/dashboard/users': typeof authedDashboardUsersRoute
   '/dashboard': typeof authedDashboardIndexRoute
@@ -190,12 +143,10 @@ export interface FileRoutesByTo {
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/_authed': typeof AuthedRoute
   '/signout': typeof SignoutRoute
-  '/auth': typeof AuthRouteWithChildren
-  '/auth/_auth': typeof AuthAuthRoute
-  '/auth/signin': typeof AuthSigninRoute
-  '/auth/signup': typeof AuthSignupRoute
+  '/(unauthed)/signin': typeof unauthedSigninRoute
+  '/(unauthed)/signup': typeof unauthedSignupRoute
+  '/(authed)/': typeof authedIndexRoute
   '/(authed)/dashboard/tasks': typeof authedDashboardTasksRoute
   '/(authed)/dashboard/users': typeof authedDashboardUsersRoute
   '/(authed)/dashboard/': typeof authedDashboardIndexRoute
@@ -204,32 +155,28 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | ''
     | '/signout'
-    | '/auth'
-    | '/auth/signin'
-    | '/auth/signup'
+    | '/signin'
+    | '/signup'
+    | '/'
     | '/dashboard/tasks'
     | '/dashboard/users'
     | '/dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | ''
     | '/signout'
-    | '/auth'
-    | '/auth/signin'
-    | '/auth/signup'
+    | '/signin'
+    | '/signup'
+    | '/'
     | '/dashboard/tasks'
     | '/dashboard/users'
     | '/dashboard'
   id:
     | '__root__'
-    | '/_authed'
     | '/signout'
-    | '/auth'
-    | '/auth/_auth'
-    | '/auth/signin'
-    | '/auth/signup'
+    | '/(unauthed)/signin'
+    | '/(unauthed)/signup'
+    | '/(authed)/'
     | '/(authed)/dashboard/tasks'
     | '/(authed)/dashboard/users'
     | '/(authed)/dashboard/'
@@ -237,18 +184,20 @@ export interface FileRouteTypes {
 }
 
 export interface RootRouteChildren {
-  AuthedRoute: typeof AuthedRoute
   SignoutRoute: typeof SignoutRoute
-  AuthRoute: typeof AuthRouteWithChildren
+  unauthedSigninRoute: typeof unauthedSigninRoute
+  unauthedSignupRoute: typeof unauthedSignupRoute
+  authedIndexRoute: typeof authedIndexRoute
   authedDashboardTasksRoute: typeof authedDashboardTasksRoute
   authedDashboardUsersRoute: typeof authedDashboardUsersRoute
   authedDashboardIndexRoute: typeof authedDashboardIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  AuthedRoute: AuthedRoute,
   SignoutRoute: SignoutRoute,
-  AuthRoute: AuthRouteWithChildren,
+  unauthedSigninRoute: unauthedSigninRoute,
+  unauthedSignupRoute: unauthedSignupRoute,
+  authedIndexRoute: authedIndexRoute,
   authedDashboardTasksRoute: authedDashboardTasksRoute,
   authedDashboardUsersRoute: authedDashboardUsersRoute,
   authedDashboardIndexRoute: authedDashboardIndexRoute,
@@ -264,39 +213,26 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/_authed",
         "/signout",
-        "/auth",
+        "/(unauthed)/signin",
+        "/(unauthed)/signup",
+        "/(authed)/",
         "/(authed)/dashboard/tasks",
         "/(authed)/dashboard/users",
         "/(authed)/dashboard/"
       ]
     },
-    "/_authed": {
-      "filePath": "_authed.tsx"
-    },
     "/signout": {
       "filePath": "signout.tsx"
     },
-    "/auth": {
-      "filePath": "auth",
-      "children": [
-        "/auth/_auth",
-        "/auth/signin",
-        "/auth/signup"
-      ]
+    "/(unauthed)/signin": {
+      "filePath": "(unauthed)/signin.tsx"
     },
-    "/auth/_auth": {
-      "filePath": "auth/_auth.tsx",
-      "parent": "/auth"
+    "/(unauthed)/signup": {
+      "filePath": "(unauthed)/signup.tsx"
     },
-    "/auth/signin": {
-      "filePath": "auth/signin.tsx",
-      "parent": "/auth"
-    },
-    "/auth/signup": {
-      "filePath": "auth/signup.tsx",
-      "parent": "/auth"
+    "/(authed)/": {
+      "filePath": "(authed)/index.tsx"
     },
     "/(authed)/dashboard/tasks": {
       "filePath": "(authed)/dashboard.tasks.tsx"

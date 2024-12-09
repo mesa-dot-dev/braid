@@ -19,7 +19,8 @@
     "**/.sst": true,
     "**/.output": true,
     ".nvmrc": true,
-    "sst-env.d.ts": false
+    "sst-env.d.ts": false,
+    "app/routeTree.gen.ts": true
   },
   "typescript.tsdk": "./node_modules/typescript/lib",
   "tailwindCSS.experimental.classRegex": [

@@ -12,15 +12,13 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
-export const Route = createFileRoute("/_authed")({
+export const Route = createFileRoute("/(authed)/")({
   component: RouteComponent,
   loader: () => ({ breadcrumb: "Dashboard" }),
   beforeLoad: ({ context }) => {
-    console.log("BASE!");
     if (!context.user) throw new Error("Not authenticated");
   },
   onError: (error) => {
-    console.log("error");
     if (error.message === "Not authenticated") throw redirect({ to: "/auth/signin" });
 
     throw error;

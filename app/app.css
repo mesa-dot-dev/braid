@@ -86,3 +86,12 @@
     @apply bg-background text-foreground font-dm-sans;
   }
 }
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
