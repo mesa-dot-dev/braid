@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import { Resource } from "sst";
-import * as statusMessageSchema from "./status-message";
+import * as statusMessageSchema from "./status-message.sql";
 
 export const schema = {
   ...statusMessageSchema,
