@@ -1,18 +1,26 @@
 import { StatusMessageTable } from "@/database/status-message";
-import { createSelectSchema } from "drizzle-zod";
 
-export interface Product {
+export type RSSFeed = {
+  title: string;
+  link: string;
+  description: string;
+  pubDate: string;
+};
+
+export interface IProduct {
   name: string;
   displayName: string;
   logo: string;
-  getServices: () => Promise<Product[]>;
+  getServices: () => Promise<IService[]>;
   getFeed: () => Promise<StatusMessage[]>;
+  classifyMessage: (message: StatusMessage) => Promise<ClassifiedMessage>;
 }
 
-// export const StatusMessageSchema = createSelectSchema(StatusMessageTable).omit({
-//   product: true,
-//   affectedServices: true,
-// });
+export interface IService {
+  name: string;
+  displayName: string;
+}
+
 export type StatusMessage = Omit<typeof StatusMessageTable.$inferSelect, "product" | "affectedServices">;
 export interface ClassifiedMessage extends StatusMessage {
   affectedServices: string[];
@@ -48,4 +56,14 @@ async function classifyWithLLM(
   // TODO: Implement actual Claude API call here
   // For now, returning mock data
   return ['github-actions', 'api'];
+}
+
+export abstract class Product implements IProduct {
+  abstract readonly name: string;
+  abstract readonly displayName: string;
+  abstract readonly logo: string;
+
+  abstract getServices(): Promise<IService[]>;
+  abstract getFeed(): Promise<StatusMessage[]>;
+  abstract classifyMessage(message: StatusMessage): Promise<ClassifiedMessage>;
 }
