@@ -1,5 +1,5 @@
 import { getProducts } from "../products/index";
-import { Product } from "../app/lib/product";
+import { ProductFeed } from "../app/lib/product";
 import { describe, expect, it, vi } from "vitest";
 
 // vi.mock("node:fs", () => ({
@@ -16,10 +16,10 @@ import { describe, expect, it, vi } from "vitest";
 
 describe("getProducts", () => {
   it("should import products and return them as an array", async () => {
-    const products: Product[] = await getProducts();
+    const products: ProductFeed[] = await getProducts();
 
     products.forEach((product) => {
-      expect(product).toBeInstanceOf(Product);
+      expect(product).toBeInstanceOf(ProductFeed);
     });
 
     const names = ["github"];

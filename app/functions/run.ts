@@ -1,7 +1,4 @@
-import { db } from "@/database/db";
 import { getProducts } from "../../products";
-import { StatusMessageTable } from "@/database/schema.sql";
-import { eq, desc } from "drizzle-orm";
 import { ClassifiedMessage } from "@/lib/interfaces";
 
 export async function handler() {
