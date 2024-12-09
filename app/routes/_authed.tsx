@@ -12,18 +12,37 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
-export const Route = createFileRoute("/(dashboard)/dashboard")({
+export const Route = createFileRoute("/_authed")({
   component: RouteComponent,
   loader: () => ({ breadcrumb: "Dashboard" }),
   beforeLoad: ({ context }) => {
+    console.log("BASE!");
     if (!context.user) throw new Error("Not authenticated");
   },
   onError: (error) => {
-    if (error.message === "Not authenticated") throw redirect({ to: "/signin" });
+    console.log("error");
+    if (error.message === "Not authenticated") throw redirect({ to: "/auth/signin" });
 
     throw error;
   },
 });
+
+function RouteComponent() {
+  return (
+    <AppSidebar>
+      <header className="flex h-16 shrink-0 items-center gap-2">
+        <div className="flex items-center gap-2 px-4">
+          <SidebarTrigger className="-ml-1" />
+          <Separator orientation="vertical" className="mr-2 h-4" />
+          <DashboardBreadcrumb />
+        </div>
+      </header>
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <Outlet />
+      </div>
+    </AppSidebar>
+  );
+}
 
 const DashboardBreadcrumb = () => {
   const matches = useMatches();
@@ -55,20 +74,3 @@ const DashboardBreadcrumb = () => {
     </Breadcrumb>
   );
 };
-
-function RouteComponent() {
-  return (
-    <AppSidebar>
-      <header className="flex h-16 shrink-0 items-center gap-2">
-        <div className="flex items-center gap-2 px-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator orientation="vertical" className="mr-2 h-4" />
-          <DashboardBreadcrumb />
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <Outlet />
-      </div>
-    </AppSidebar>
-  );
-}

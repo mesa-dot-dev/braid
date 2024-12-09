@@ -8,23 +8,29 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as SignupImport } from './routes/signup'
 import { Route as SignoutImport } from './routes/signout'
-import { Route as SigninImport } from './routes/signin'
-import { Route as IndexImport } from './routes/index'
-import { Route as dashboardDashboardImport } from './routes/(dashboard)/dashboard'
-import { Route as dashboardDashboardIndexImport } from './routes/(dashboard)/dashboard.index'
-import { Route as dashboardDashboardUsersImport } from './routes/(dashboard)/dashboard.users'
-import { Route as dashboardDashboardTasksImport } from './routes/(dashboard)/dashboard.tasks'
+import { Route as AuthedImport } from './routes/_authed'
+import { Route as AuthSignupImport } from './routes/auth/signup'
+import { Route as AuthSigninImport } from './routes/auth/signin'
+import { Route as AuthAuthImport } from './routes/auth/_auth'
+import { Route as authedDashboardIndexImport } from './routes/(authed)/dashboard.index'
+import { Route as authedDashboardUsersImport } from './routes/(authed)/dashboard.users'
+import { Route as authedDashboardTasksImport } from './routes/(authed)/dashboard.tasks'
+
+// Create Virtual Routes
+
+const AuthImport = createFileRoute('/auth')()
 
 // Create/Update Routes
 
-const SignupRoute = SignupImport.update({
-  id: '/signup',
-  path: '/signup',
+const AuthRoute = AuthImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -34,58 +40,55 @@ const SignoutRoute = SignoutImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const SigninRoute = SigninImport.update({
+const AuthedRoute = AuthedImport.update({
+  id: '/_authed',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthSignupRoute = AuthSignupImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthSigninRoute = AuthSigninImport.update({
   id: '/signin',
   path: '/signin',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthAuthRoute = AuthAuthImport.update({
+  id: '/_auth',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const authedDashboardIndexRoute = authedDashboardIndexImport.update({
+  id: '/(authed)/dashboard/',
+  path: '/dashboard/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
-  id: '/',
-  path: '/',
+const authedDashboardUsersRoute = authedDashboardUsersImport.update({
+  id: '/(authed)/dashboard/users',
+  path: '/dashboard/users',
   getParentRoute: () => rootRoute,
 } as any)
 
-const dashboardDashboardRoute = dashboardDashboardImport.update({
-  id: '/(dashboard)/dashboard',
-  path: '/dashboard',
+const authedDashboardTasksRoute = authedDashboardTasksImport.update({
+  id: '/(authed)/dashboard/tasks',
+  path: '/dashboard/tasks',
   getParentRoute: () => rootRoute,
-} as any)
-
-const dashboardDashboardIndexRoute = dashboardDashboardIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => dashboardDashboardRoute,
-} as any)
-
-const dashboardDashboardUsersRoute = dashboardDashboardUsersImport.update({
-  id: '/users',
-  path: '/users',
-  getParentRoute: () => dashboardDashboardRoute,
-} as any)
-
-const dashboardDashboardTasksRoute = dashboardDashboardTasksImport.update({
-  id: '/tasks',
-  path: '/tasks',
-  getParentRoute: () => dashboardDashboardRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/signin': {
-      id: '/signin'
-      path: '/signin'
-      fullPath: '/signin'
-      preLoaderRoute: typeof SigninImport
+    '/_authed': {
+      id: '/_authed'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthedImport
       parentRoute: typeof rootRoute
     }
     '/signout': {
@@ -95,141 +98,160 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignoutImport
       parentRoute: typeof rootRoute
     }
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthImport
       parentRoute: typeof rootRoute
     }
-    '/(dashboard)/dashboard': {
-      id: '/(dashboard)/dashboard'
+    '/auth/_auth': {
+      id: '/auth/_auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthAuthImport
+      parentRoute: typeof AuthRoute
+    }
+    '/auth/signin': {
+      id: '/auth/signin'
+      path: '/signin'
+      fullPath: '/auth/signin'
+      preLoaderRoute: typeof AuthSigninImport
+      parentRoute: typeof AuthImport
+    }
+    '/auth/signup': {
+      id: '/auth/signup'
+      path: '/signup'
+      fullPath: '/auth/signup'
+      preLoaderRoute: typeof AuthSignupImport
+      parentRoute: typeof AuthImport
+    }
+    '/(authed)/dashboard/tasks': {
+      id: '/(authed)/dashboard/tasks'
+      path: '/dashboard/tasks'
+      fullPath: '/dashboard/tasks'
+      preLoaderRoute: typeof authedDashboardTasksImport
+      parentRoute: typeof rootRoute
+    }
+    '/(authed)/dashboard/users': {
+      id: '/(authed)/dashboard/users'
+      path: '/dashboard/users'
+      fullPath: '/dashboard/users'
+      preLoaderRoute: typeof authedDashboardUsersImport
+      parentRoute: typeof rootRoute
+    }
+    '/(authed)/dashboard/': {
+      id: '/(authed)/dashboard/'
       path: '/dashboard'
       fullPath: '/dashboard'
-      preLoaderRoute: typeof dashboardDashboardImport
+      preLoaderRoute: typeof authedDashboardIndexImport
       parentRoute: typeof rootRoute
-    }
-    '/(dashboard)/dashboard/tasks': {
-      id: '/(dashboard)/dashboard/tasks'
-      path: '/tasks'
-      fullPath: '/dashboard/tasks'
-      preLoaderRoute: typeof dashboardDashboardTasksImport
-      parentRoute: typeof dashboardDashboardImport
-    }
-    '/(dashboard)/dashboard/users': {
-      id: '/(dashboard)/dashboard/users'
-      path: '/users'
-      fullPath: '/dashboard/users'
-      preLoaderRoute: typeof dashboardDashboardUsersImport
-      parentRoute: typeof dashboardDashboardImport
-    }
-    '/(dashboard)/dashboard/': {
-      id: '/(dashboard)/dashboard/'
-      path: '/'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof dashboardDashboardIndexImport
-      parentRoute: typeof dashboardDashboardImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface dashboardDashboardRouteChildren {
-  dashboardDashboardTasksRoute: typeof dashboardDashboardTasksRoute
-  dashboardDashboardUsersRoute: typeof dashboardDashboardUsersRoute
-  dashboardDashboardIndexRoute: typeof dashboardDashboardIndexRoute
+interface AuthRouteChildren {
+  AuthAuthRoute: typeof AuthAuthRoute
+  AuthSigninRoute: typeof AuthSigninRoute
+  AuthSignupRoute: typeof AuthSignupRoute
 }
 
-const dashboardDashboardRouteChildren: dashboardDashboardRouteChildren = {
-  dashboardDashboardTasksRoute: dashboardDashboardTasksRoute,
-  dashboardDashboardUsersRoute: dashboardDashboardUsersRoute,
-  dashboardDashboardIndexRoute: dashboardDashboardIndexRoute,
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthAuthRoute: AuthAuthRoute,
+  AuthSigninRoute: AuthSigninRoute,
+  AuthSignupRoute: AuthSignupRoute,
 }
 
-const dashboardDashboardRouteWithChildren =
-  dashboardDashboardRoute._addFileChildren(dashboardDashboardRouteChildren)
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/signin': typeof SigninRoute
+  '': typeof AuthedRoute
   '/signout': typeof SignoutRoute
-  '/signup': typeof SignupRoute
-  '/dashboard': typeof dashboardDashboardRouteWithChildren
-  '/dashboard/tasks': typeof dashboardDashboardTasksRoute
-  '/dashboard/users': typeof dashboardDashboardUsersRoute
-  '/dashboard/': typeof dashboardDashboardIndexRoute
+  '/auth': typeof AuthAuthRoute
+  '/auth/signin': typeof AuthSigninRoute
+  '/auth/signup': typeof AuthSignupRoute
+  '/dashboard/tasks': typeof authedDashboardTasksRoute
+  '/dashboard/users': typeof authedDashboardUsersRoute
+  '/dashboard': typeof authedDashboardIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/signin': typeof SigninRoute
+  '': typeof AuthedRoute
   '/signout': typeof SignoutRoute
-  '/signup': typeof SignupRoute
-  '/dashboard/tasks': typeof dashboardDashboardTasksRoute
-  '/dashboard/users': typeof dashboardDashboardUsersRoute
-  '/dashboard': typeof dashboardDashboardIndexRoute
+  '/auth': typeof AuthAuthRoute
+  '/auth/signin': typeof AuthSigninRoute
+  '/auth/signup': typeof AuthSignupRoute
+  '/dashboard/tasks': typeof authedDashboardTasksRoute
+  '/dashboard/users': typeof authedDashboardUsersRoute
+  '/dashboard': typeof authedDashboardIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/signin': typeof SigninRoute
+  '/_authed': typeof AuthedRoute
   '/signout': typeof SignoutRoute
-  '/signup': typeof SignupRoute
-  '/(dashboard)/dashboard': typeof dashboardDashboardRouteWithChildren
-  '/(dashboard)/dashboard/tasks': typeof dashboardDashboardTasksRoute
-  '/(dashboard)/dashboard/users': typeof dashboardDashboardUsersRoute
-  '/(dashboard)/dashboard/': typeof dashboardDashboardIndexRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/auth/_auth': typeof AuthAuthRoute
+  '/auth/signin': typeof AuthSigninRoute
+  '/auth/signup': typeof AuthSignupRoute
+  '/(authed)/dashboard/tasks': typeof authedDashboardTasksRoute
+  '/(authed)/dashboard/users': typeof authedDashboardUsersRoute
+  '/(authed)/dashboard/': typeof authedDashboardIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/signin'
+    | ''
     | '/signout'
-    | '/signup'
-    | '/dashboard'
+    | '/auth'
+    | '/auth/signin'
+    | '/auth/signup'
     | '/dashboard/tasks'
     | '/dashboard/users'
-    | '/dashboard/'
+    | '/dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
-    | '/signin'
+    | ''
     | '/signout'
-    | '/signup'
+    | '/auth'
+    | '/auth/signin'
+    | '/auth/signup'
     | '/dashboard/tasks'
     | '/dashboard/users'
     | '/dashboard'
   id:
     | '__root__'
-    | '/'
-    | '/signin'
+    | '/_authed'
     | '/signout'
-    | '/signup'
-    | '/(dashboard)/dashboard'
-    | '/(dashboard)/dashboard/tasks'
-    | '/(dashboard)/dashboard/users'
-    | '/(dashboard)/dashboard/'
+    | '/auth'
+    | '/auth/_auth'
+    | '/auth/signin'
+    | '/auth/signup'
+    | '/(authed)/dashboard/tasks'
+    | '/(authed)/dashboard/users'
+    | '/(authed)/dashboard/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  SigninRoute: typeof SigninRoute
+  AuthedRoute: typeof AuthedRoute
   SignoutRoute: typeof SignoutRoute
-  SignupRoute: typeof SignupRoute
-  dashboardDashboardRoute: typeof dashboardDashboardRouteWithChildren
+  AuthRoute: typeof AuthRouteWithChildren
+  authedDashboardTasksRoute: typeof authedDashboardTasksRoute
+  authedDashboardUsersRoute: typeof authedDashboardUsersRoute
+  authedDashboardIndexRoute: typeof authedDashboardIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  SigninRoute: SigninRoute,
+  AuthedRoute: AuthedRoute,
   SignoutRoute: SignoutRoute,
-  SignupRoute: SignupRoute,
-  dashboardDashboardRoute: dashboardDashboardRouteWithChildren,
+  AuthRoute: AuthRouteWithChildren,
+  authedDashboardTasksRoute: authedDashboardTasksRoute,
+  authedDashboardUsersRoute: authedDashboardUsersRoute,
+  authedDashboardIndexRoute: authedDashboardIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -242,44 +264,48 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/signin",
+        "/_authed",
         "/signout",
-        "/signup",
-        "/(dashboard)/dashboard"
+        "/auth",
+        "/(authed)/dashboard/tasks",
+        "/(authed)/dashboard/users",
+        "/(authed)/dashboard/"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/signin": {
-      "filePath": "signin.tsx"
+    "/_authed": {
+      "filePath": "_authed.tsx"
     },
     "/signout": {
       "filePath": "signout.tsx"
     },
-    "/signup": {
-      "filePath": "signup.tsx"
-    },
-    "/(dashboard)/dashboard": {
-      "filePath": "(dashboard)/dashboard.tsx",
+    "/auth": {
+      "filePath": "auth",
       "children": [
-        "/(dashboard)/dashboard/tasks",
-        "/(dashboard)/dashboard/users",
-        "/(dashboard)/dashboard/"
+        "/auth/_auth",
+        "/auth/signin",
+        "/auth/signup"
       ]
     },
-    "/(dashboard)/dashboard/tasks": {
-      "filePath": "(dashboard)/dashboard.tasks.tsx",
-      "parent": "/(dashboard)/dashboard"
+    "/auth/_auth": {
+      "filePath": "auth/_auth.tsx",
+      "parent": "/auth"
     },
-    "/(dashboard)/dashboard/users": {
-      "filePath": "(dashboard)/dashboard.users.tsx",
-      "parent": "/(dashboard)/dashboard"
+    "/auth/signin": {
+      "filePath": "auth/signin.tsx",
+      "parent": "/auth"
     },
-    "/(dashboard)/dashboard/": {
-      "filePath": "(dashboard)/dashboard.index.tsx",
-      "parent": "/(dashboard)/dashboard"
+    "/auth/signup": {
+      "filePath": "auth/signup.tsx",
+      "parent": "/auth"
+    },
+    "/(authed)/dashboard/tasks": {
+      "filePath": "(authed)/dashboard.tasks.tsx"
+    },
+    "/(authed)/dashboard/users": {
+      "filePath": "(authed)/dashboard.users.tsx"
+    },
+    "/(authed)/dashboard/": {
+      "filePath": "(authed)/dashboard.index.tsx"
     }
   }
 }

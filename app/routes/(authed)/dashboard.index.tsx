@@ -1,8 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from '@tanstack/react-router'
 
-export const Route = createFileRoute("/(dashboard)/dashboard/")({
+export const Route = createFileRoute('/(authed)/dashboard/')({
   component: RouteComponent,
-});
+})
 
 function RouteComponent() {
   return (
@@ -13,12 +13,18 @@ function RouteComponent() {
           Go home
         </Link>
       </div>
-      <Link to="/dashboard/tasks" className="aspect-video rounded-xl bg-muted/50 p-4">
+      <Link
+        to="/dashboard/tasks"
+        className="aspect-video rounded-xl bg-muted/50 p-4"
+      >
         Click to go to Tasks
       </Link>
-      <Link to="/dashboard/users" className="aspect-video rounded-xl bg-muted/50 p-4">
+      <Link
+        to="/dashboard/users"
+        className="aspect-video rounded-xl bg-muted/50 p-4"
+      >
         Click to go to Users
       </Link>
     </div>
-  );
+  )
 }

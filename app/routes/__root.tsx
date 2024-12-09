@@ -3,16 +3,15 @@ import { createRootRouteWithContext, Outlet, ScrollRestoration } from "@tanstack
 import { createServerFn, Meta, Scripts } from "@tanstack/start";
 import * as React from "react";
 import { getWebRequest } from "vinxi/http";
-import { auth } from "@/features/auth/lib/auth";
 import appCss from "@/app.css?url";
 
 const getUser = createServerFn({ method: "GET" }).handler(async () => {
   const { headers } = getWebRequest();
-  const session = await auth.api.getSession({ headers });
+  const session = null;
 
   if (!session) return null;
 
-  return session.user;
+  // return session.user;
 });
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
@@ -39,20 +38,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootComponent() {
   return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
-  );
-}
-
-function RootDocument({ children }: { children: React.ReactNode }) {
-  return (
     <html>
       <head>
         <Meta />
       </head>
       <body>
-        {children}
+        <Outlet />
         <ScrollRestoration />
         <Scripts />
       </body>

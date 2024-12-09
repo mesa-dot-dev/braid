@@ -1,7 +1,6 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
-import { SignIn } from "@/features/auth/components/sign-in";
 
-export const Route = createFileRoute("/signin")({
+export const Route = createFileRoute("/auth/signin")({
   component: RouteComponent,
   beforeLoad: ({ context }) => {
     if (context.user) throw new Error("Already authenticated");
@@ -16,8 +15,7 @@ export const Route = createFileRoute("/signin")({
 function RouteComponent() {
   return (
     <>
-      <SignIn />
-      <Link to="/">Home</Link>
+      <Link to="">Home</Link>
     </>
   );
 }
