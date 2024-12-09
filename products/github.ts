@@ -1,8 +1,8 @@
 import { ClassifiedMessage, IService, RSSFeed, StatusMessage } from "@/lib/interfaces";
-import { Product } from "../app/lib/product";
+import { ProductFeed } from "../app/lib/product";
 import Parser from "rss-parser";
 
-export class GitHub extends Product {
+export class GitHub extends ProductFeed {
   name = "github";
   displayName = "GitHub";
   logo = "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png";
@@ -50,7 +50,7 @@ export class GitHub extends Product {
       {
         name: "copilot",
         displayName: "Copilot",
-      }
+      },
     ];
   }
 

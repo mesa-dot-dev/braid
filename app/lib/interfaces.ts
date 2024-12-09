@@ -7,7 +7,7 @@ export type RSSFeed = {
   pubDate: string;
 };
 
-export interface IProduct {
+export interface IProductFeed {
   name: string;
   displayName: string;
   logo: string;

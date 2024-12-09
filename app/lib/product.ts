@@ -3,10 +3,9 @@ import { db } from "@/database/db";
 import { StatusMessageTable } from "@/database/schema.sql";
 import { ClassifiedMessage, IService, StatusMessage } from "./interfaces";
 import { desc } from "drizzle-orm";
+import { IProductFeed } from "./interfaces";
 
-import { IProduct } from "./interfaces";
-
-export abstract class Product implements IProduct {
+export abstract class ProductFeed implements IProductFeed {
   abstract readonly name: string;
   abstract readonly displayName: string;
   abstract readonly logo: string;
@@ -30,20 +29,11 @@ export abstract class Product implements IProduct {
       ? messages.filter((message) => message.pubDate > latestMessage.pubDate)
       : messages;
 
-    const classifiedMessages = await Promise.all(messages.map(this.classifyMessage));
+    const classifiedMessages = await Promise.all(latestMessages.map(this.classifyMessage));
     await db.insert(StatusMessageTable).values(classifiedMessages);
 
     return classifiedMessages;
   }
-
-  // async getLatestMessages(latestMessage: ClassifiedMessage): Promise<StatusMessage[]> {
-  //   const latestMessage = await db
-  //     .select()
-  //     .from(StatusMessageTable)
-  //     .where(eq(StatusMessageTable.product, product.name))
-  //     .orderBy(desc(StatusMessageTable.pubDate))
-  //     .limit(1);
-  // }
 
   async classifyMessage(message: StatusMessage): Promise<ClassifiedMessage> {
     const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY;
