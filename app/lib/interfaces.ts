@@ -1,4 +1,4 @@
-import { StatusMessageTable } from "@/database/status-message.sql";
+import { StatusMessageTable } from "@/database/schema.sql";
 
 export type RSSFeed = {
   title: string;
