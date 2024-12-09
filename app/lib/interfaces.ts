@@ -12,7 +12,7 @@ export interface IProduct {
   displayName: string;
   logo: string;
   getServices: () => Promise<IService[]>;
-  getFeed: () => Promise<StatusMessage[]>;
+  getFeed: (latestMessage?: ClassifiedMessage) => Promise<StatusMessage[]>;
   classifyMessage: (message: StatusMessage) => Promise<ClassifiedMessage>;
 }
 
