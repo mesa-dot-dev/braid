@@ -46,16 +46,52 @@ async function classifyWithLLM(
   title: string, 
   availableServices: string[]
 ): Promise<string[]> {
-  // Here you would implement the Claude API call
-  // Example implementation:
+  const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY;
+  if (!CLAUDE_API_KEY) {
+    throw new Error('pls add CLAUDE_API_KEY to your .env file');
+  }
+
   const prompt = `Given this GitHub status message title: "${title}"
     And this list of available services: ${availableServices.join(', ')}
     Please return only the names of services that are likely affected by this status message.
     Return the response as a JSON array of strings.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': CLAUDE_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-3-sonnet-20240229',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: prompt
+        }]
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Claude API request failed: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const content = data.content[0].text;
     
-  // TODO: Implement actual Claude API call here
-  // For now, returning mock data
-  return ['github-actions', 'api'];
+    // Parse the JSON response from Claude
+    try {
+      return JSON.parse(content);
+    } catch (e) {
+      console.error('Failed to parse Claude response:', content);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error calling Claude API:', error);
+    return [];
+  }
 }
 
 export abstract class Product implements IProduct {
