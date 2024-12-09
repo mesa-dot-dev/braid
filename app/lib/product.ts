@@ -23,7 +23,7 @@ export abstract class Product implements IProduct {
       And this content: "${message.content}"
       And this list of available services: ${availableServiceNames.join(", ")}
       Please return only the names of services that are likely affected by this status message.
-      Return the response as a JSON array of strings.`;
+      Return the response as a JSON array of strings. If none of the given services are likely affected, return an empty array.`;
 
     try {
       const response = await fetch("https://api.anthropic.com/v1/messages", {
