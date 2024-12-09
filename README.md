@@ -21,7 +21,14 @@ sso_role_name = AdministratorAccess
 region = us-east-1
 ```
 
-3. Install Dependencies and start service
+3. Add .env
+
+```bash
+CLERK_PUBLISHABLE_KEY=<publishable-key>
+CLERK_SECRET_KEY=<secret-key>
+```
+
+4. Install Dependencies and start service
 
 ```
 pnpm i

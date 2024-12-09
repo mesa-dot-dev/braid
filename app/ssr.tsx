@@ -12,8 +12,8 @@ export default createClerkHandler(
     getRouterManifest,
   }),
   {
-    secretKey: Resource.ClerkSecretKey.value,
-    publishableKey: Resource.Config.VITE_CLERK_PUBLISHABLE_KEY,
+    // secretKey: Resource.ClerkSecretKey.value,
+    // publishableKey: Resource.Config.VITE_CLERK_PUBLISHABLE_KEY,
     signInUrl: "/signin",
     signUpUrl: "/signup",
   },
