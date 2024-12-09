@@ -50,11 +50,7 @@ export class GitHub extends Product {
       {
         name: "copilot",
         displayName: "Copilot",
-      },
-      {
-        name: "general",
-        displayName: "General",
-      },
+      }
     ];
   }
 
