@@ -15,6 +15,8 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
+import { AppSidebar } from "@/components/app-sidebar";
+import { AppNavbar } from "@/components/app-navbar";
 
 export const Route = createFileRoute("/(authed)/config")({
   component: ConfigComponent,
@@ -64,70 +66,75 @@ function ConfigComponent() {
   };
 
   return (
-    <div className="container mx-auto py-8 max-w-4xl">
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Service Configuration</h1>
-          <p className="text-muted-foreground mt-2">
-            Choose which services and products you want to monitor. You'll receive notifications
-            when there are incidents affecting your selected products.
-          </p>
-        </div>
+    <AppSidebar>
+      <div className="min-h-screen bg-background">
+        <AppNavbar />
+        <main className="mx-auto max-w-7xl p-4">
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">Service Configuration</h1>
+              <p className="text-muted-foreground mt-2">
+                Choose which services and products you want to monitor. You'll receive notifications
+                when there are incidents affecting your selected products.
+              </p>
+            </div>
 
-        <div className="grid gap-6">
-          {services.map((service) => (
-            <Collapsible
-              key={service.id}
-              open={expandedServices.has(service.id)}
-              onOpenChange={() => toggleService(service.id)}
-            >
-              <Card className="overflow-hidden">
-                <CollapsibleTrigger className="w-full">
-                  <CardHeader className="flex flex-row items-center justify-between p-6">
-                    <div>
-                      <h3 className="text-xl font-semibold">{service.name}</h3>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {service.description}
-                      </p>
-                    </div>
-                    <Button variant="ghost" size="icon">
-                      {expandedServices.has(service.id) ? (
-                        <ChevronUp className="h-4 w-4" />
-                      ) : (
-                        <ChevronDown className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </CardHeader>
-                </CollapsibleTrigger>
-                
-                <CollapsibleContent>
-                  <CardContent className="p-6 pt-0">
-                    <div className="space-y-4">
-                      {service.products.map((product) => (
-                        <div
-                          key={product.id}
-                          className="flex items-center justify-between rounded-lg border p-4"
-                        >
-                          <div className="space-y-1">
-                            <p className="font-medium">{product.name}</p>
-                          </div>
-                          <Switch
-                            checked={product.enabled}
-                            onCheckedChange={() => {
-                              // Implement toggle logic here
-                              console.log(`Toggled ${product.name}`);
-                            }}
-                          />
+            <div className="grid gap-6">
+              {services.map((service) => (
+                <Collapsible
+                  key={service.id}
+                  open={expandedServices.has(service.id)}
+                  onOpenChange={() => toggleService(service.id)}
+                >
+                  <Card className="overflow-hidden">
+                    <CollapsibleTrigger className="w-full">
+                      <CardHeader className="flex flex-row items-center justify-between p-6">
+                        <div>
+                          <h3 className="text-xl font-semibold">{service.name}</h3>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            {service.description}
+                          </p>
                         </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </CollapsibleContent>
-              </Card>
-            </Collapsible>
-          ))}
-        </div>
+                        <Button variant="ghost" size="icon">
+                          {expandedServices.has(service.id) ? (
+                            <ChevronUp className="h-4 w-4" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </CardHeader>
+                    </CollapsibleTrigger>
+                    
+                    <CollapsibleContent>
+                      <CardContent className="p-6 pt-0">
+                        <div className="space-y-4">
+                          {service.products.map((product) => (
+                            <div
+                              key={product.id}
+                              className="flex items-center justify-between rounded-lg border p-4"
+                            >
+                              <div className="space-y-1">
+                                <p className="font-medium">{product.name}</p>
+                              </div>
+                              <Switch
+                                checked={product.enabled}
+                                onCheckedChange={() => {
+                                  // Implement toggle logic here
+                                  console.log(`Toggled ${product.name}`);
+                                }}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </CollapsibleContent>
+                  </Card>
+                </Collapsible>
+              ))}
+            </div>
+          </div>
+        </main>
       </div>
-    </div>
+    </AppSidebar>
   );
 } 
