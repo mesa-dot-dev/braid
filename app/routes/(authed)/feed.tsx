@@ -119,16 +119,14 @@ function FeedComponent() {
 
   return (
     <AppSidebar>
-      <div className="bg-background">
+      <div className="bg-background min-h-screen">
         <AppNavbar />
-        <main className="mt-14 mx-auto max-w-7xl p-4">
+        <main className="mx-auto max-w-7xl p-4 pt-20">
           <div className="flex gap-8">
-            {/* Incident Feed */}
             <div className="flex-1">
               <IncidentFeed incidents={filteredIncidents} />
             </div>
 
-            {/* Filters Sidebar */}
             <div className="w-64 shrink-0">
               <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
                 <div className="flex flex-col space-y-1.5 p-4">
