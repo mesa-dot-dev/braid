@@ -23,51 +23,52 @@ export function IncidentCard({ incident }: IncidentCardProps) {
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg">
       <div className="p-6">
-        {/* Product and Service Header */}
-        <div className="flex items-center gap-4 mb-4">
-          {incident.productIcon && (
-            <img 
-              src={incident.productIcon} 
-              alt={incident.product}
-              className="w-8 h-8 object-contain"
-            />
-          )}
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="text-lg font-semibold text-gray-900">
+        {/* Service Alert Banner */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            {incident.productIcon && (
+              <img 
+                src={incident.productIcon} 
+                alt={incident.product}
+                className="w-10 h-10 object-contain"
+              />
+            )}
+            <div>
+              <div className="text-sm font-medium text-gray-500">
                 {incident.product}
-              </h3>
-              <span className="text-gray-400">/</span>
-              <h4 className="text-lg font-medium text-gray-600">
+              </div>
+              <div className="text-2xl font-bold text-gray-900">
                 {incident.service}
-              </h4>
+              </div>
             </div>
+          </div>
+          <div className="flex flex-col items-end gap-1">
+            <Badge 
+              variant="secondary" 
+              className={`${statusColors[incident.status]} text-white capitalize px-3 py-1`}
+            >
+              {incident.status}
+            </Badge>
+            <Badge 
+              variant="secondary" 
+              className={`${severityColors[incident.severity]} capitalize px-3 py-1`}
+            >
+              {incident.severity}
+            </Badge>
           </div>
         </div>
 
-        {/* Status and Severity */}
-        <div className="flex gap-2 mb-3">
-          <Badge 
-            variant="secondary" 
-            className={`${statusColors[incident.status]} text-white capitalize`}
-          >
-            {incident.status}
-          </Badge>
-          <Badge 
-            variant="secondary" 
-            className={`${severityColors[incident.severity]} capitalize`}
-          >
-            {incident.severity}
-          </Badge>
-        </div>
+        {/* Content */}
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-semibold mb-2">{incident.title}</h3>
+            <p className="text-gray-600">{incident.description}</p>
+          </div>
 
-        {/* Title and Description */}
-        <h3 className="text-xl font-semibold mb-2">{incident.title}</h3>
-        <p className="text-gray-600 mb-4">{incident.description}</p>
-
-        {/* Timestamp */}
-        <div className="text-sm text-gray-500">
-          {formatDistanceToNow(incident.timestamp, { addSuffix: true })}
+          {/* Timestamp */}
+          <div className="text-sm text-gray-500">
+            {formatDistanceToNow(incident.timestamp, { addSuffix: true })}
+          </div>
         </div>
       </div>
     </Card>

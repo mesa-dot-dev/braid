@@ -8,22 +8,37 @@ import { Incident } from "@/types/incident";
 const mockIncidents: Incident[] = [
   {
     id: "1",
-    title: "API Performance Degradation",
+    title: "GitHub/Actions: Workflow Execution Delays",
     status: "resolved",
     severity: "major",
     timestamp: new Date("2024-03-10T15:30:00"),
-    service: "GitHub",
-    description: "We observed elevated error rates and latency across GitHub API endpoints.",
+    product: "GitHub",
+    service: "Actions",
+    description: "We observed elevated queue times and execution delays in GitHub Actions workflows.",
+    productIcon: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
   },
   {
     id: "2",
-    title: "EC2 Instance Connectivity Issues",
+    title: "AWS/EC2: Instance Connectivity Issues",
     status: "investigating",
     severity: "critical",
     timestamp: new Date("2024-03-10T16:45:00"),
-    service: "AWS",
+    product: "AWS",
+    service: "EC2",
     description: "Multiple EC2 instances in us-east-1 are experiencing connectivity issues.",
+    productIcon: "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg"
   },
+  {
+    id: "3",
+    title: "Cloudflare/API Gateway: Rate Limiting Issues",
+    status: "monitoring",
+    severity: "minor",
+    timestamp: new Date("2024-03-10T17:15:00"),
+    product: "Cloudflare",
+    service: "API Gateway",
+    description: "Intermittent rate limiting issues affecting some API Gateway customers.",
+    productIcon: "https://upload.wikimedia.org/wikipedia/commons/9/94/Cloudflare_Logo.png"
+  }
 ];
 
 export const Route = createFileRoute("/(authed)/feed")({
