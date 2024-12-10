@@ -42,7 +42,7 @@ export function IncidentCard({ incident }: IncidentCardProps) {
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-end gap-1">
+          <div className="flex items-center gap-2">
             <Badge 
               variant="secondary" 
               className={`${statusColors[incident.status]} text-white capitalize px-3 py-1`}
