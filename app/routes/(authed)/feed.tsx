@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { IncidentFeed } from "@/components/incidents/incident-feed";
+import { AppSidebar } from "@/components/app-sidebar";
 import { AppNavbar } from "@/components/app-navbar";
 import { Incident } from "@/types/incident";
 import { useState, useMemo } from "react";
@@ -9,7 +10,6 @@ import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Check, Filter } from "lucide-react";
-import { SidebarProvider } from "@/components/sidebar-provider";
 
 // Mock data - replace with real API calls later
 const mockIncidents: Incident[] = [
@@ -118,7 +118,7 @@ function FeedComponent() {
   };
 
   return (
-    <SidebarProvider>
+    <AppSidebar>
       <div className="bg-background min-h-screen">
         <AppNavbar />
         <main className="mx-auto max-w-7xl p-4 pt-20">
@@ -242,6 +242,6 @@ function FeedComponent() {
           </div>
         </main>
       </div>
-    </SidebarProvider>
+    </AppSidebar>
   );
 }
