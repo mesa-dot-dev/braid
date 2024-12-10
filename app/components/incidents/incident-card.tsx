@@ -10,18 +10,18 @@ interface IncidentCardProps {
 export function IncidentCard({ incident }: IncidentCardProps) {
   const statusColors = {
     investigating: "bg-destructive text-destructive-foreground",
-    monitoring: "bg-accent text-accent-foreground",
-    resolved: "bg-muted text-muted-foreground",
+    monitoring: "bg-orange-500/10 text-orange-700",
+    resolved: "bg-green-500 text-green-950",
   };
 
   const severityColors = {
-    critical: "bg-destructive/10 text-destructive border-destructive/20",
-    major: "bg-accent/10 text-accent border-accent/20",
-    minor: "bg-secondary text-secondary-foreground",
+    critical: "bg-red-500/10 text-red-700 border-red-200",
+    major: "bg-yellow-500/10 text-yellow-700 border-yellow-200",
+    minor: "bg-gray-100 text-gray-700 border-gray-200",
   };
 
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-lg border-border/40 bg-card/60 backdrop-blur-[2px] hover:border-accent/20">
+    <Card className="overflow-hidden transition-all hover:shadow-lg border-border/40 bg-card/60 backdrop-blur-[2px] hover:border-gray-300/20">
       <div className="p-6">
         {/* Service Alert Banner */}
         <div className="flex items-center justify-between mb-6">

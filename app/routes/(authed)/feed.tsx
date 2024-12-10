@@ -164,8 +164,8 @@ function FeedComponent() {
                             <button
                               key={product}
                               onClick={() => toggleProduct(product)}
-                              className={`flex w-full items-center justify-between rounded-md px-2 py-1 text-sm transition-colors hover:bg-accent hover:text-accent-foreground ${
-                                selectedProducts.has(product) ? 'bg-accent' : ''
+                              className={`flex w-full items-center justify-between rounded-md px-2 py-1 text-sm transition-colors hover:bg-gray-100 hover:text-gray-900 ${
+                                selectedProducts.has(product) ? 'bg-gray-100' : ''
                               }`}
                             >
                               {product}
@@ -193,8 +193,8 @@ function FeedComponent() {
                             <button
                               key={service}
                               onClick={() => toggleService(service)}
-                              className={`flex w-full items-center justify-between rounded-md px-2 py-1 text-sm transition-colors hover:bg-accent hover:text-accent-foreground ${
-                                selectedServices.has(service) ? 'bg-accent' : ''
+                              className={`flex w-full items-center justify-between rounded-md px-2 py-1 text-sm transition-colors hover:bg-gray-100 hover:text-gray-900 ${
+                                selectedServices.has(service) ? 'bg-gray-100' : ''
                               }`}
                             >
                               {service}
