@@ -5,7 +5,7 @@ import { DashboardBreadcrumb } from "@/components/dashboard-breadcrumb";
 
 export function AppNavbar() {
   return (
-    <header className="flex h-16 shrink-0 items-center border-b">
+    <header className="fixed top-0 left-0 right-0 z-50 flex h-16 shrink-0 items-center border-b bg-background">
       <div className="flex h-full flex-1 items-center gap-4 px-4">
         <div className="flex items-center gap-2">
           <SidebarTrigger className="-ml-1" />
