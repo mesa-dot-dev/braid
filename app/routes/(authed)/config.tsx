@@ -25,7 +25,6 @@ import {
   Check
 } from "lucide-react";
 import { useState } from "react";
-import { AppSidebar } from "@/components/app-sidebar";
 import { AppNavbar } from "@/components/app-navbar";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -143,106 +142,104 @@ function ConfigComponent() {
   };
 
   return (
-    <AppSidebar>
-      <div className="min-h-screen bg-background">
-        <AppNavbar />
-        <main className="container mx-auto p-4 pt-20">
-          <div className="space-y-6">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">Service Configuration</h1>
-              <p className="text-muted-foreground mt-2">
-                Choose which services and products you want to monitor. You'll receive notifications
-                when there are incidents affecting your selected products.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <Input
-                placeholder="Search services and products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="max-w-md"
-              />
-
-              <ScrollArea className="h-[calc(100vh-300px)]">
-                <div className="space-y-4">
-                  {filteredServices.map((service) => (
-                    <Collapsible
-                      key={service.id}
-                      open={expandedServices.has(service.id)}
-                      onOpenChange={() => toggleService(service.id)}
-                    >
-                      <Card className="overflow-hidden">
-                        <CollapsibleTrigger className="w-full text-left">
-                          <CardHeader className="p-6">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <h3 className="text-xl font-semibold">{service.name}</h3>
-                                <p className="text-sm text-muted-foreground mt-1">
-                                  {service.description}
-                                </p>
-                              </div>
-                              <Button variant="ghost" size="icon">
-                                {expandedServices.has(service.id) ? (
-                                  <ChevronUp className="h-4 w-4" />
-                                ) : (
-                                  <ChevronDown className="h-4 w-4" />
-                                )}
-                              </Button>
-                            </div>
-                          </CardHeader>
-                        </CollapsibleTrigger>
-                        
-                        <CollapsibleContent>
-                          <CardContent className="p-0">
-                            <div className="py-2 px-6">
-                              <Input
-                                placeholder={`Search ${service.name} products...`}
-                                value={productSearchQueries[service.id] || ""}
-                                onChange={(e) => handleProductSearch(service.id, e.target.value)}
-                                className="w-full"
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                            </div>
-                            <div className="divide-y">
-                              {getFilteredProducts(service).map((product) => {
-                                const isEnabled = enabledProducts.has(`${service.id}-${product.id}`);
-                                return (
-                                  <button
-                                    key={product.id}
-                                    className={cn(
-                                      "w-full px-6 py-4 flex items-center justify-between hover:bg-secondary/50 transition-colors",
-                                      isEnabled && "bg-secondary"
-                                    )}
-                                    onClick={() => toggleProduct(service.id, product.id)}
-                                  >
-                                    <div className="flex items-center gap-3">
-                                      {getIconForProduct(service.id, product.id)}
-                                      <span className="font-medium">{product.name}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                      <Switch 
-                                        checked={isEnabled}
-                                        onCheckedChange={() => toggleProduct(service.id, product.id)}
-                                        onClick={(e) => e.stopPropagation()}
-                                        className="data-[state=checked]:bg-primary"
-                                      />
-                                    </div>
-                                  </button>
-                                );
-                              })}
-                            </div>
-                          </CardContent>
-                        </CollapsibleContent>
-                      </Card>
-                    </Collapsible>
-                  ))}
-                </div>
-              </ScrollArea>
-            </div>
+    <div className="min-h-screen bg-background">
+      <AppNavbar />
+      <main className="container mx-auto p-4 pt-20">
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Service Configuration</h1>
+            <p className="text-muted-foreground mt-2">
+              Choose which services and products you want to monitor. You'll receive notifications
+              when there are incidents affecting your selected products.
+            </p>
           </div>
-        </main>
-      </div>
-    </AppSidebar>
+
+          <div className="space-y-4">
+            <Input
+              placeholder="Search services and products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="max-w-md"
+            />
+
+            <ScrollArea className="h-[calc(100vh-300px)]">
+              <div className="space-y-4">
+                {filteredServices.map((service) => (
+                  <Collapsible
+                    key={service.id}
+                    open={expandedServices.has(service.id)}
+                    onOpenChange={() => toggleService(service.id)}
+                  >
+                    <Card className="overflow-hidden">
+                      <CollapsibleTrigger className="w-full text-left">
+                        <CardHeader className="p-6">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <h3 className="text-xl font-semibold">{service.name}</h3>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {service.description}
+                              </p>
+                            </div>
+                            <Button variant="ghost" size="icon">
+                              {expandedServices.has(service.id) ? (
+                                <ChevronUp className="h-4 w-4" />
+                              ) : (
+                                <ChevronDown className="h-4 w-4" />
+                              )}
+                            </Button>
+                          </div>
+                        </CardHeader>
+                      </CollapsibleTrigger>
+                      
+                      <CollapsibleContent>
+                        <CardContent className="p-0">
+                          <div className="py-2 px-6">
+                            <Input
+                              placeholder={`Search ${service.name} products...`}
+                              value={productSearchQueries[service.id] || ""}
+                              onChange={(e) => handleProductSearch(service.id, e.target.value)}
+                              className="w-full"
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                          </div>
+                          <div className="divide-y">
+                            {getFilteredProducts(service).map((product) => {
+                              const isEnabled = enabledProducts.has(`${service.id}-${product.id}`);
+                              return (
+                                <button
+                                  key={product.id}
+                                  className={cn(
+                                    "w-full px-6 py-4 flex items-center justify-between hover:bg-secondary/50 transition-colors",
+                                    isEnabled && "bg-secondary"
+                                  )}
+                                  onClick={() => toggleProduct(service.id, product.id)}
+                                >
+                                  <div className="flex items-center gap-3">
+                                    {getIconForProduct(service.id, product.id)}
+                                    <span className="font-medium">{product.name}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <Switch 
+                                      checked={isEnabled}
+                                      onCheckedChange={() => toggleProduct(service.id, product.id)}
+                                      onClick={(e) => e.stopPropagation()}
+                                      className="data-[state=checked]:bg-primary"
+                                    />
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </CardContent>
+                      </CollapsibleContent>
+                    </Card>
+                  </Collapsible>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
+        </div>
+      </main>
+    </div>
   );
 } 

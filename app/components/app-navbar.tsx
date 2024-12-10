@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { Separator } from "./ui/separator";
-import { SidebarTrigger } from "./ui/sidebar";
 import { DashboardBreadcrumb } from "@/components/dashboard-breadcrumb";
 
 export function AppNavbar() {
