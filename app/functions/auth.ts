@@ -1,64 +1,50 @@
-import { Hono } from "hono";
+import { authorizer, createSubjects } from "@openauthjs/openauth";
 import { handle } from "hono/aws-lambda";
-import { trimTrailingSlash } from "hono/trailing-slash";
-import { z } from "zod";
-import { zValidator } from "@hono/zod-validator";
-import { client } from "integrations/slack/client";
 import { Resource } from "sst";
-import { RedirectStatusCode, StatusCode } from "hono/utils/http-status";
+import { object, string } from "valibot";
+import { Oauth2Adapter, Oauth2WrappedConfig } from "@openauthjs/openauth/adapter/oauth2";
+import { client } from "integrations/slack/client";
 
-const routes = new Hono().all("*", async (c) => {
-  const url = `http://localhost:3000${c.req.path}?${new URLSearchParams(c.req.query()).toString()}`;
-  const res = await fetch(url, {
-    method: c.req.method,
-    headers: c.req.raw.headers,
-    body: c.req.raw.body,
+export function SlackAdapter(config: Oauth2WrappedConfig) {
+  return Oauth2Adapter({
+    ...config,
+    type: "slack",
+    endpoint: {
+      authorization: "https://slack.com/openid/connect/authorize",
+      token: "https://slack.com/api/openid.connect.token",
+    },
   });
+}
 
-  // Handle redirects by returning redirect response
-  if (res.status >= 300 && res.status < 400) {
-    const location = res.headers.get("Location");
-    if (location) {
-      return c.redirect(location, res.status as RedirectStatusCode);
+const app = authorizer({
+  subjects: createSubjects({
+    user: object({
+      email: string(),
+      teamId: string(),
+    }),
+  }),
+  providers: {
+    slack: SlackAdapter({
+      clientID: Resource.SlackClientId.value,
+      clientSecret: Resource.SlackClientSecret.value,
+      scopes: ["email", "profile", "openid"],
+    }),
+  },
+  success: async (ctx, value) => {
+    if (value.provider === "slack") {
+      const token = value.tokenset.access;
+      const user = await client.openid.connect.userInfo({
+        token,
+      });
+      console.log(user);
+      return ctx.subject("user", {
+        email: user.email!,
+        teamId: user["https://slack.com/team_id"]!,
+      });
     }
-  }
-
-  const body = await res.arrayBuffer();
-  return c.body(body, res.status as StatusCode, Object.fromEntries(res.headers.entries()));
+    throw new Error("Invalid provider");
+  },
 });
-// .get(
-//   "/auth/slack/oauth_redirect",
-//   zValidator("query", z.object({ code: z.string(), state: z.string().optional() })),
-//   async (c) => {
-//     const { code } = c.req.valid("query");
-//     console.log(code);
-//     const response = await client.oauth.v2.access({
-//       code: code,
-//       client_id: Resource.SlackClientId.value,
-//       client_secret: Resource.SlackClientSecret.value,
-//       redirect_uri:
-//         "https://pjhqiendzsqsqjb64jzome2c6u0tfdnx.lambda-url.us-east-1.on.aws/api/auth/slack/oauth_redirect",
-//     });
-//     console.log(response);
-//     const identity = await client.users.profile.get({
-//       token: response.authed_user?.access_token,
-//     });
-//     console.log(identity);
-//     return c.json(response);
-//   },
-// );
 
-const api = new Hono()
-  .use(trimTrailingSlash())
-  .route("/api", routes)
-  .get("/ping", async (c) => {
-    console.log("ping");
-    return c.body("pong");
-  })
-  .notFound((c) => {
-    console.log("not found", c.req.url);
-    return c.notFound();
-  });
-
-export type ApiRoutes = typeof routes;
-export const handler = handle(api);
+// @ts-ignore
+export const handler = handle(app);

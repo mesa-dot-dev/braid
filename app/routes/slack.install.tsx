@@ -11,7 +11,7 @@ const installationUrl = createServerFn({ method: "GET" }).handler(async () => {
     scope: scopes.join(","),
     user_scope: userScopes.join(","),
     redirect_uri:
-      "https://pjhqiendzsqsqjb64jzome2c6u0tfdnx.lambda-url.us-east-1.on.aws/api/auth/slack/oauth_redirect",
+      "https://b4bd5w7k5n3jqfd4cxqxvpyhum0jyojq.lambda-url.us-east-1.on.aws/api/auth/slack/oauth_redirect",
   });
 
   return `https://slack.com/oauth/v2/authorize?${params.toString()}`;

@@ -6,7 +6,7 @@ import "sst"
 export {}
 declare module "sst" {
   export interface Resource {
-    "Auth": {
+    "API": {
       "name": string
       "type": "sst.aws.Function"
       "url": string

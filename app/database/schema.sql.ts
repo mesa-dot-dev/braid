@@ -1,4 +1,12 @@
-import { text, pgTable, timestamp, jsonb, boolean, serial, integer, primaryKey } from "drizzle-orm/pg-core";
+import { text, pgTable, timestamp, jsonb, serial, integer, primaryKey, uuid } from "drizzle-orm/pg-core";
+
+export const UserTable = pgTable("users", {
+  id: text("id").primaryKey(),
+  externalId: text("external_id").notNull().unique(),
+  email: text("email").notNull(),
+  name: text("name").notNull(),
+  avatarUrl: text("avatar_url"),
+});
 
 export const SlackInstallationTable = pgTable("slack_installations", {
   id: serial("id").primaryKey(),

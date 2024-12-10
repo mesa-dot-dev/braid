@@ -14,7 +14,7 @@ export default createClerkHandler(
   {
     // secretKey: Resource.ClerkSecretKey.value,
     // publishableKey: Resource.Config.VITE_CLERK_PUBLISHABLE_KEY,
-    signInUrl: "/signin",
-    signUpUrl: "/signup",
+    signInUrl: "/sign-in",
+    signUpUrl: "/sign-up",
   },
 )(defaultStreamHandler);

@@ -2,16 +2,16 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Outlet } from "@tanstack/react-router";
 import { AppSidebar } from "@/components/app-sidebar";
 import { AppNavbar } from "@/components/app-navbar";
+import { useAuth } from "@clerk/tanstack-start";
+import { createServerFn } from "@tanstack/start";
+import { getWebRequest } from "vinxi/http";
+import { getAuth } from "@clerk/tanstack-start/server";
+import { clerkClient } from "@clerk/tanstack-start/server";
 
 export const Route = createFileRoute("/(authed)/")({
   component: RouteComponent,
-  loader: () => ({ breadcrumb: "Dashboard" }),
   beforeLoad: ({ context }) => {
-    // if (!context.user) throw new Error("Not authenticated");
-  },
-  onError: (error) => {
-    if (error.message === "Not authenticated") throw redirect({ to: "/signin" });
-    throw error;
+    if (!context.userId) throw redirect({ to: "/sign-in/$" });
   },
 });
 
@@ -20,11 +20,9 @@ function RouteComponent() {
     <div className="flex min-h-svh">
       <AppNavbar />
       <div className="flex flex-1 flex-col pt-16">
-        {/* <AppSidebar> */}
         <div className="flex flex-1 flex-col gap-4 p-4">
           <Outlet />
         </div>
-        {/* </AppSidebar> */}
       </div>
     </div>
   );

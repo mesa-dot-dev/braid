@@ -54,14 +54,21 @@ export default $config({
             proxyId: `DevDatabaseProxy`,
           });
 
+    // const auth = new sst.aws.Auth("MyAuth", {
+    //   authorizer: {
+    //     handler: "app/functions/auth.handler",
+    //     link: [database, clerkSecretKey, config, slackClientId, slackClientSecret, slackSigningSecret],
+    //   },
+    // });
+
     const webApp = new sst.aws.TanstackStart(`Web`, {
       link: [database, clerkSecretKey, config, slackClientId, slackClientSecret, slackSigningSecret],
       vpc,
       dev: { command: "pnpm run dev:app" },
     });
 
-    const auth = new sst.aws.Function(`Auth`, {
-      handler: "./app/functions/auth.handler",
+    const api = new sst.aws.Function(`API`, {
+      handler: "./app/functions/api.handler",
       link: [database, slackClientId, slackClientSecret, slackSigningSecret],
       url: {
         cors: {
@@ -114,7 +121,7 @@ export default $config({
 
     return {
       web: webApp.url,
-      auth: auth.url,
+      api: api.url,
     };
   },
 });
