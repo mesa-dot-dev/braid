@@ -4,8 +4,9 @@ import { getAuth, clerkClient } from "@clerk/tanstack-start/server";
 import { getWebRequest } from "vinxi/http";
 import { Resource } from "sst";
 import { client } from "integrations/slack/client";
-import { UserTable } from "@/database/schema.sql";
+import { SlackInstallationTable, UserTable } from "@/database/schema.sql";
 import { db } from "@/database/db";
+import { eq } from "drizzle-orm";
 
 const userInfo = createServerFn({ method: "GET" }).handler(async () => {
   const { userId } = await getAuth(getWebRequest());
@@ -35,10 +36,21 @@ const userInfo = createServerFn({ method: "GET" }).handler(async () => {
     .onConflictDoNothing()
     .returning();
 
+  const [existingInstallation] = await db
+    .select({
+      id: SlackInstallationTable.id,
+    })
+    .from(SlackInstallationTable)
+    .where(eq(SlackInstallationTable.teamId, userInfo["https://slack.com/team_id"]!));
+
+  if (!existingInstallation) {
+    throw redirect({ to: "/slack/install" });
+  }
+
   console.log(savedUser);
-  throw redirect({ to: "/" });
+  throw redirect({ to: "/feed" });
 });
 
-export const Route = createFileRoute("/(authed)/signed-in")({
+export const Route = createFileRoute("/_authed/signed-in")({
   loader: () => userInfo(),
 });

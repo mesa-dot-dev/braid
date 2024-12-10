@@ -8,9 +8,9 @@ import { getWebRequest } from "vinxi/http";
 import { getAuth } from "@clerk/tanstack-start/server";
 import { clerkClient } from "@clerk/tanstack-start/server";
 
-export const Route = createFileRoute("/(authed)/")({
+export const Route = createFileRoute("/_authed")({
   component: RouteComponent,
-  beforeLoad: ({ context }) => {
+  loader: ({ context }) => {
     if (!context.userId) throw redirect({ to: "/sign-in/$" });
   },
 });

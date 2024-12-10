@@ -6,6 +6,8 @@ import { zValidator } from "@hono/zod-validator";
 import { client } from "integrations/slack/client";
 import { Resource } from "sst";
 import { RedirectStatusCode, StatusCode } from "hono/utils/http-status";
+import { db } from "@/database/db";
+import { SlackInstallationTable } from "@/database/schema.sql";
 
 const routes = new Hono()
   // .all("*", async (c) => {
@@ -33,16 +35,33 @@ const routes = new Hono()
     async (c) => {
       const { code } = c.req.valid("query");
       console.log(code);
+      console.log(new URL(c.req.url).origin);
       const response = await client.oauth.v2.access({
         code: code,
         client_id: Resource.SlackClientId.value,
         client_secret: Resource.SlackClientSecret.value,
-        redirect_uri:
-          "https://b4bd5w7k5n3jqfd4cxqxvpyhum0jyojq.lambda-url.us-east-1.on.aws/api/auth/slack/oauth_redirect",
+        redirect_uri: `${new URL(c.req.url).origin}/api/auth/slack/oauth_redirect`,
       });
 
-      // return c.json(response);
-      return c.redirect("http://localhost:3000/");
+      const [installation] = await db
+        .insert(SlackInstallationTable)
+        .values({
+          teamId: response.team!.id!,
+          teamName: response.team!.name!,
+          botUserId: response.bot_user_id!,
+          botToken: response.access_token!,
+          botScopes: response.scope!,
+          incomingWebhook: {
+            channel: response.incoming_webhook!.channel!,
+            channelId: response.incoming_webhook!.channel_id!,
+            configurationUrl: response.incoming_webhook!.configuration_url!,
+            url: response.incoming_webhook!.url!,
+          },
+        })
+        .onConflictDoNothing()
+        .returning();
+      console.log("Saved new installation", installation.id);
+      return c.redirect("http://localhost:3000/feed");
     },
   );
 

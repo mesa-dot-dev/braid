@@ -12,14 +12,9 @@ export const SlackInstallationTable = pgTable("slack_installations", {
   id: serial("id").primaryKey(),
   teamId: text("team_id").notNull().unique(),
   teamName: text("team_name").notNull(),
-  bot: jsonb("bot")
-    .$type<{
-      id: string;
-      token: string;
-      scopes: string[];
-      userId: string;
-    }>()
-    .notNull(),
+  botUserId: text("bot_user_id").notNull(),
+  botToken: text("bot_token").notNull(),
+  botScopes: text("bot_scopes").notNull(),
   incomingWebhook: jsonb("incoming_webhook")
     .$type<{
       channel: string;

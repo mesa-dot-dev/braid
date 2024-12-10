@@ -9,7 +9,9 @@ CREATE TABLE IF NOT EXISTS "slack_installations" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"team_id" text NOT NULL,
 	"team_name" text NOT NULL,
-	"bot" jsonb NOT NULL,
+	"bot_user_id" text NOT NULL,
+	"bot_token" text NOT NULL,
+	"bot_scopes" text NOT NULL,
 	"incoming_webhook" jsonb NOT NULL,
 	CONSTRAINT "slack_installations_team_id_unique" UNIQUE("team_id")
 );
@@ -21,6 +23,15 @@ CREATE TABLE IF NOT EXISTS "status_messages" (
 	"pub_date" timestamp NOT NULL,
 	"product" text NOT NULL,
 	"affected_services" jsonb DEFAULT '[]'::jsonb NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "users" (
+	"id" text PRIMARY KEY NOT NULL,
+	"external_id" text NOT NULL,
+	"email" text NOT NULL,
+	"name" text NOT NULL,
+	"avatar_url" text,
+	CONSTRAINT "users_external_id_unique" UNIQUE("external_id")
 );
 --> statement-breakpoint
 DO $$ BEGIN
