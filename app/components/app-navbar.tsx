@@ -9,7 +9,6 @@ export function AppNavbar() {
       <header className="flex h-16 items-center px-4 lg:px-6">
         <div className="flex flex-1 items-center gap-6">
           <div className="flex items-center gap-4">
-            <SidebarTrigger className="-ml-2 hover:bg-muted/60 transition-colors rounded-lg" />
             <Link 
               to="/" 
               className="flex items-center transition-opacity hover:opacity-80"
