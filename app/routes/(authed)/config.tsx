@@ -25,12 +25,12 @@ import {
   Check
 } from "lucide-react";
 import { useState } from "react";
-import { AppSidebar } from "@/components/app-sidebar";
 import { AppNavbar } from "@/components/app-navbar";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { SidebarProvider } from "@/components/sidebar-provider";
 
 export const Route = createFileRoute("/(authed)/config")({
   component: ConfigComponent,
@@ -143,7 +143,7 @@ function ConfigComponent() {
   };
 
   return (
-    <AppSidebar>
+    <SidebarProvider>
       <div className="min-h-screen bg-background">
         <AppNavbar />
         <main className="container mx-auto p-4 pt-20">
@@ -243,6 +243,6 @@ function ConfigComponent() {
           </div>
         </main>
       </div>
-    </AppSidebar>
+    </SidebarProvider>
   );
 } 
