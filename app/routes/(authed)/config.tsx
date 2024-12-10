@@ -21,12 +21,15 @@ import {
   Server,
   Database,
   FileCode,
-  Plus
+  Plus,
+  Check
 } from "lucide-react";
 import { useState } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import { AppNavbar } from "@/components/app-navbar";
 import { cn } from "@/lib/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/(authed)/config")({
   component: ConfigComponent,
@@ -71,6 +74,8 @@ function ConfigComponent() {
         .map(product => `${service.id}-${product.id}`)
     )
   ));
+  const [searchQuery, setSearchQuery] = useState("");
+  const [productSearchQueries, setProductSearchQueries] = useState<Record<string, string>>({});
 
   const toggleService = (serviceId: string) => {
     const newExpanded = new Set(expandedServices);
@@ -114,6 +119,28 @@ function ConfigComponent() {
     return <Cloud className="h-5 w-5" />;
   };
 
+  const filteredServices = services.filter(service =>
+    service.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    service.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    service.products.some(product => 
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
+
+  const getFilteredProducts = (service: typeof services[0]) => {
+    const productSearch = productSearchQueries[service.id] || "";
+    return service.products.filter(product =>
+      product.name.toLowerCase().includes(productSearch.toLowerCase())
+    );
+  };
+
+  const handleProductSearch = (serviceId: string, query: string) => {
+    setProductSearchQueries(prev => ({
+      ...prev,
+      [serviceId]: query
+    }));
+  };
+
   return (
     <AppSidebar>
       <div className="min-h-screen bg-background">
@@ -128,73 +155,94 @@ function ConfigComponent() {
               </p>
             </div>
 
-            <div className="grid gap-6">
-              {services.map((service) => (
-                <Collapsible
-                  key={service.id}
-                  open={expandedServices.has(service.id)}
-                  onOpenChange={() => toggleService(service.id)}
-                >
-                  <Card className="overflow-hidden">
-                    <CollapsibleTrigger className="w-full text-left">
-                      <CardHeader className="p-6">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h3 className="text-xl font-semibold">{service.name}</h3>
-                            <p className="text-sm text-muted-foreground mt-1">
-                              {service.description}
-                            </p>
-                          </div>
-                          <Button variant="ghost" size="icon">
-                            {expandedServices.has(service.id) ? (
-                              <ChevronUp className="h-4 w-4" />
-                            ) : (
-                              <ChevronDown className="h-4 w-4" />
-                            )}
-                          </Button>
-                        </div>
-                      </CardHeader>
-                    </CollapsibleTrigger>
-                    
-                    <CollapsibleContent>
-                      <CardContent className="p-6 pt-0">
-                        <div className="grid grid-cols-4 gap-4">
-                          {service.products.map((product) => {
-                            const isEnabled = enabledProducts.has(`${service.id}-${product.id}`);
-                            return (
-                              <Button
-                                key={product.id}
-                                variant={isEnabled ? "default" : "outline"}
-                                className={cn(
-                                  "flex flex-col items-center justify-center gap-2 h-24 w-full transition-[background-color] duration-75",
-                                  isEnabled && "bg-primary text-primary-foreground",
-                                  !isEnabled && "hover:bg-primary/10"
+            <div className="space-y-4">
+              <Input
+                placeholder="Search services and products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="max-w-md"
+              />
+
+              <ScrollArea className="h-[calc(100vh-300px)]">
+                <div className="space-y-4">
+                  {filteredServices.map((service) => (
+                    <Collapsible
+                      key={service.id}
+                      open={expandedServices.has(service.id)}
+                      onOpenChange={() => toggleService(service.id)}
+                    >
+                      <Card className="overflow-hidden">
+                        <CollapsibleTrigger className="w-full text-left">
+                          <CardHeader className="p-6">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <h3 className="text-xl font-semibold">{service.name}</h3>
+                                <p className="text-sm text-muted-foreground mt-1">
+                                  {service.description}
+                                </p>
+                              </div>
+                              <Button variant="ghost" size="icon">
+                                {expandedServices.has(service.id) ? (
+                                  <ChevronUp className="h-4 w-4" />
+                                ) : (
+                                  <ChevronDown className="h-4 w-4" />
                                 )}
-                                onClick={() => toggleProduct(service.id, product.id)}
-                              >
-                                {getIconForProduct(service.id, product.id)}
-                                <span className="text-sm font-medium text-center">{product.name}</span>
                               </Button>
-                            );
-                          })}
-                        </div>
-                      </CardContent>
-                    </CollapsibleContent>
+                            </div>
+                          </CardHeader>
+                        </CollapsibleTrigger>
+                        
+                        <CollapsibleContent>
+                          <CardContent className="p-0">
+                            <div className="py-2 px-6">
+                              <Input
+                                placeholder={`Search ${service.name} products...`}
+                                value={productSearchQueries[service.id] || ""}
+                                onChange={(e) => handleProductSearch(service.id, e.target.value)}
+                                className="w-full"
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            </div>
+                            <div className="divide-y">
+                              {getFilteredProducts(service).map((product) => {
+                                const isEnabled = enabledProducts.has(`${service.id}-${product.id}`);
+                                return (
+                                  <button
+                                    key={product.id}
+                                    className={cn(
+                                      "w-full px-6 py-4 flex items-center justify-between hover:bg-accent/5 transition-colors",
+                                      isEnabled && "bg-accent/10"
+                                    )}
+                                    onClick={() => toggleProduct(service.id, product.id)}
+                                  >
+                                    <div className="flex items-center gap-3">
+                                      {getIconForProduct(service.id, product.id)}
+                                      <span className="font-medium">{product.name}</span>
+                                    </div>
+                                    {isEnabled && <Check className="h-4 w-4 text-accent" />}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </CardContent>
+                        </CollapsibleContent>
+                      </Card>
+                    </Collapsible>
+                  ))}
+                  
+                  <Card className="overflow-hidden hover:bg-accent/50 transition-colors cursor-pointer">
+                    <CardHeader className="flex flex-row items-center justify-center p-6">
+                      <div className="flex flex-col items-center text-center">
+                        <Plus className="h-5 w-5 mb-2 text-muted-foreground" />
+                        <h3 className="text-xl font-semibold">Add a new service</h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Configure a new service integration
+                        </p>
+                      </div>
+                    </CardHeader>
                   </Card>
-                </Collapsible>
-              ))}
-              
-              <Card className="overflow-hidden hover:bg-accent/50 transition-colors cursor-pointer">
-                <CardHeader className="flex flex-row items-center justify-center p-6">
-                  <div className="flex flex-col items-center text-center">
-                    <Plus className="h-5 w-5 mb-2 text-muted-foreground" />
-                    <h3 className="text-xl font-semibold">Add a new service</h3>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Configure a new service integration
-                    </p>
-                  </div>
-                </CardHeader>
-              </Card>
+                </div>
+              </ScrollArea>
             </div>
           </div>
         </main>
