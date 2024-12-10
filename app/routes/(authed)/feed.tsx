@@ -9,50 +9,15 @@ import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Check, Filter } from "lucide-react";
-
-// Mock data - replace with real API calls later
-const mockIncidents: Incident[] = [
-  {
-    id: "1",
-    title: "GitHub/Actions: Workflow Execution Delays",
-    status: "resolved",
-    severity: "major",
-    timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
-    product: "GitHub",
-    service: "Actions",
-    description: "We observed elevated queue times and execution delays in GitHub Actions workflows.",
-    productIcon: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
-  },
-  {
-    id: "2",
-    title: "AWS/EC2: Instance Connectivity Issues",
-    status: "investigating",
-    severity: "critical",
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-    product: "AWS",
-    service: "EC2",
-    description: "Multiple EC2 instances in us-east-1 are experiencing connectivity issues.",
-    productIcon: "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg"
-  },
-  {
-    id: "3",
-    title: "Cloudflare/API Gateway: Rate Limiting Issues",
-    status: "monitoring",
-    severity: "minor",
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24), // 24 hours ago
-    product: "Cloudflare",
-    service: "API Gateway",
-    description: "Intermittent rate limiting issues affecting some API Gateway customers.",
-    productIcon: "https://upload.wikimedia.org/wikipedia/commons/9/94/Cloudflare_Logo.png"
-  }
-];
+import { getStatusMessages } from "@/server/status";
 
 export const Route = createFileRoute("/(authed)/feed")({
   component: FeedComponent,
-  loader: () => ({}),
+  loader: () => getStatusMessages(),
 });
 
 function FeedComponent() {
+  const messages = Route.useLoaderData();
   const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set());
   const [selectedServices, setSelectedServices] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
@@ -61,26 +26,27 @@ function FeedComponent() {
 
   // Extract unique products and services
   const { products, services } = useMemo(() => {
-    const productsSet = new Set(mockIncidents.map(incident => incident.product));
-    const servicesSet = new Set(mockIncidents.map(incident => incident.service));
+    const productsSet = new Set(messages.map(message => message.product));
+    const servicesSet = new Set(messages.flatMap(message => message.affectedServices));
     return {
       products: Array.from(productsSet),
       services: Array.from(servicesSet)
     };
-  }, []);
+  }, [messages]);
 
   // Filter incidents based on selections
   const filteredIncidents = useMemo(() => {
-    return mockIncidents.filter(incident => {
-      const matchesProduct = selectedProducts.size === 0 || selectedProducts.has(incident.product);
-      const matchesService = selectedServices.size === 0 || selectedServices.has(incident.service);
+    return messages.filter(message => {
+      const matchesProduct = selectedProducts.size === 0 || selectedProducts.has(message.product);
+      const matchesService = selectedServices.size === 0 || 
+        message.affectedServices.some(service => selectedServices.has(service));
       const matchesSearch = searchQuery === "" || 
-        incident.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        incident.description.toLowerCase().includes(searchQuery.toLowerCase());
+        message.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        message.content.toLowerCase().includes(searchQuery.toLowerCase());
       
       return matchesProduct && matchesService && matchesSearch;
     });
-  }, [selectedProducts, selectedServices, searchQuery]);
+  }, [messages, selectedProducts, selectedServices, searchQuery]);
 
   // Filter services based on search
   const filteredServices = useMemo(() => {
@@ -122,7 +88,17 @@ function FeedComponent() {
       <main className="mx-auto max-w-7xl p-4 pt-20">
         <div className="flex gap-8">
           <div className="flex-1">
-            <IncidentFeed incidents={filteredIncidents} />
+            <IncidentFeed incidents={filteredIncidents.map(message => ({
+              id: message.guid,
+              title: message.title,
+              description: message.content,
+              timestamp: message.pubDate,
+              product: message.product,
+              service: message.affectedServices[0] || 'Unknown',
+              status: 'monitoring', // You might want to add status to your schema
+              severity: 'major', // You might want to add severity to your schema
+              productIcon: '' // You might want to add icon to your schema
+            }))} />
           </div>
 
           <div className="w-64 shrink-0">
