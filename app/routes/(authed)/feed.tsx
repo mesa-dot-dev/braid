@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { IncidentFeed } from "@/components/incidents/incident-feed";
+import { AppSidebar } from "@/components/app-sidebar";
+import { AppNavbar } from "@/components/app-navbar";
 import { Incident } from "@/types/incident";
 
 // Mock data - replace with real API calls later
@@ -30,5 +32,14 @@ export const Route = createFileRoute("/(authed)/feed")({
 });
 
 function FeedComponent() {
-  return <IncidentFeed incidents={mockIncidents} />;
+  return (
+    <AppSidebar>
+      <div className="min-h-screen bg-background">
+        <AppNavbar />
+        <main className="mx-auto max-w-7xl p-4">
+          <IncidentFeed incidents={mockIncidents} />
+        </main>
+      </div>
+    </AppSidebar>
+  );
 }
