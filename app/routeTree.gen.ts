@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as SignoutImport } from './routes/signout'
 import { Route as authedIndexImport } from './routes/(authed)/index'
+import { Route as SlackInstallImport } from './routes/slack.install'
 import { Route as unauthedSignupImport } from './routes/(unauthed)/signup'
 import { Route as unauthedSigninImport } from './routes/(unauthed)/signin'
 import { Route as authedFeedImport } from './routes/(authed)/feed'
@@ -32,6 +33,12 @@ const SignoutRoute = SignoutImport.update({
 const authedIndexRoute = authedIndexImport.update({
   id: '/(authed)/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SlackInstallRoute = SlackInstallImport.update({
+  id: '/slack/install',
+  path: '/slack/install',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -116,6 +123,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof unauthedSignupImport
       parentRoute: typeof rootRoute
     }
+    '/slack/install': {
+      id: '/slack/install'
+      path: '/slack/install'
+      fullPath: '/slack/install'
+      preLoaderRoute: typeof SlackInstallImport
+      parentRoute: typeof rootRoute
+    }
     '/(authed)/': {
       id: '/(authed)/'
       path: '/'
@@ -155,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/feed': typeof authedFeedRoute
   '/signin': typeof unauthedSigninRoute
   '/signup': typeof unauthedSignupRoute
+  '/slack/install': typeof SlackInstallRoute
   '/': typeof authedIndexRoute
   '/dashboard/tasks': typeof authedDashboardTasksRoute
   '/dashboard/users': typeof authedDashboardUsersRoute
@@ -167,6 +182,7 @@ export interface FileRoutesByTo {
   '/feed': typeof authedFeedRoute
   '/signin': typeof unauthedSigninRoute
   '/signup': typeof unauthedSignupRoute
+  '/slack/install': typeof SlackInstallRoute
   '/': typeof authedIndexRoute
   '/dashboard/tasks': typeof authedDashboardTasksRoute
   '/dashboard/users': typeof authedDashboardUsersRoute
@@ -180,6 +196,7 @@ export interface FileRoutesById {
   '/(authed)/feed': typeof authedFeedRoute
   '/(unauthed)/signin': typeof unauthedSigninRoute
   '/(unauthed)/signup': typeof unauthedSignupRoute
+  '/slack/install': typeof SlackInstallRoute
   '/(authed)/': typeof authedIndexRoute
   '/(authed)/dashboard/tasks': typeof authedDashboardTasksRoute
   '/(authed)/dashboard/users': typeof authedDashboardUsersRoute
@@ -194,6 +211,7 @@ export interface FileRouteTypes {
     | '/feed'
     | '/signin'
     | '/signup'
+    | '/slack/install'
     | '/'
     | '/dashboard/tasks'
     | '/dashboard/users'
@@ -205,6 +223,7 @@ export interface FileRouteTypes {
     | '/feed'
     | '/signin'
     | '/signup'
+    | '/slack/install'
     | '/'
     | '/dashboard/tasks'
     | '/dashboard/users'
@@ -216,6 +235,7 @@ export interface FileRouteTypes {
     | '/(authed)/feed'
     | '/(unauthed)/signin'
     | '/(unauthed)/signup'
+    | '/slack/install'
     | '/(authed)/'
     | '/(authed)/dashboard/tasks'
     | '/(authed)/dashboard/users'
@@ -229,6 +249,7 @@ export interface RootRouteChildren {
   authedFeedRoute: typeof authedFeedRoute
   unauthedSigninRoute: typeof unauthedSigninRoute
   unauthedSignupRoute: typeof unauthedSignupRoute
+  SlackInstallRoute: typeof SlackInstallRoute
   authedIndexRoute: typeof authedIndexRoute
   authedDashboardTasksRoute: typeof authedDashboardTasksRoute
   authedDashboardUsersRoute: typeof authedDashboardUsersRoute
@@ -241,6 +262,7 @@ const rootRouteChildren: RootRouteChildren = {
   authedFeedRoute: authedFeedRoute,
   unauthedSigninRoute: unauthedSigninRoute,
   unauthedSignupRoute: unauthedSignupRoute,
+  SlackInstallRoute: SlackInstallRoute,
   authedIndexRoute: authedIndexRoute,
   authedDashboardTasksRoute: authedDashboardTasksRoute,
   authedDashboardUsersRoute: authedDashboardUsersRoute,
@@ -262,6 +284,7 @@ export const routeTree = rootRoute
         "/(authed)/feed",
         "/(unauthed)/signin",
         "/(unauthed)/signup",
+        "/slack/install",
         "/(authed)/",
         "/(authed)/dashboard/tasks",
         "/(authed)/dashboard/users",
@@ -282,6 +305,9 @@ export const routeTree = rootRoute
     },
     "/(unauthed)/signup": {
       "filePath": "(unauthed)/signup.tsx"
+    },
+    "/slack/install": {
+      "filePath": "slack.install.tsx"
     },
     "/(authed)/": {
       "filePath": "(authed)/index.tsx"

@@ -7,6 +7,16 @@ import { WebClient } from "@slack/web-api";
 
 export const client = new WebClient();
 
+export const scopes = [
+  "chat:write",
+  "chat:write.customize",
+  "incoming-webhook",
+  "channels:read",
+  "channels:join",
+  "app_mentions:read",
+];
+export const userScopes = ["openid", "profile", "email"];
+
 export const installer = new InstallProvider({
   clientId: Resource.SlackClientId.value,
   clientSecret: Resource.SlackClientSecret.value,

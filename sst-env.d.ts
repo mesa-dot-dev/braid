@@ -6,6 +6,11 @@ import "sst"
 export {}
 declare module "sst" {
   export interface Resource {
+    "Auth": {
+      "name": string
+      "type": "sst.aws.Function"
+      "url": string
+    }
     "ClerkSecretKey": {
       "type": "sst.sst.Secret"
       "value": string

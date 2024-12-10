@@ -25,6 +25,7 @@
   "dependencies": {
     "@clerk/tanstack-start": "^0.6.3",
     "@fontsource-variable/dm-sans": "^5.1.0",
+    "@hono/zod-validator": "^0.4.1",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-alert-dialog": "^1.1.2",
@@ -54,6 +55,7 @@
     "@radix-ui/react-toggle": "^1.1.0",
     "@radix-ui/react-toggle-group": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.4",
+    "@slack/bolt": "^4.1.1",
     "@slack/oauth": "^3.0.1",
     "@slack/web-api": "^7.8.0",
     "@slack/webhook": "^7.0.4",
@@ -70,6 +72,7 @@
     "drizzle-orm": "^0.36.3",
     "drizzle-zod": "^0.5.1",
     "embla-carousel-react": "^8.5.1",
+    "hono": "^4.6.13",
     "input-otp": "^1.4.1",
     "lucide-react": "^0.459.0",
     "next-themes": "^0.4.4",

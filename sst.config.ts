@@ -60,13 +60,27 @@ export default $config({
       dev: { command: "pnpm run dev:app" },
     });
 
-    const runner = new sst.aws.Cron("StatusRunner", {
-      job: {
-        handler: "app/functions/run.ts",
-        link: [database, slackClientId, slackClientSecret, slackSigningSecret],
+    const auth = new sst.aws.Function(`Auth`, {
+      handler: "./app/functions/auth.handler",
+      link: [database, slackClientId, slackClientSecret, slackSigningSecret],
+      url: {
+        cors: {
+          allowOrigins: ["*"],
+          allowHeaders: ["*"],
+          allowMethods: ["*"],
+          allowCredentials: true,
+        },
       },
-      schedule: "rate(1 minute)",
+      // vpc,
     });
+
+    // const runner = new sst.aws.Cron("StatusRunner", {
+    //   job: {
+    //     handler: "app/functions/run.ts",
+    //     link: [database, slackClientId, slackClientSecret, slackSigningSecret],
+    //   },
+    //   schedule: "rate(1 minute)",
+    // });
 
     if ($app.stage === "production") {
       const databasePush = new sst.aws.Function(`DatabasePush`, {
@@ -100,6 +114,7 @@ export default $config({
 
     return {
       web: webApp.url,
+      auth: auth.url,
     };
   },
 });

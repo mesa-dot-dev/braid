@@ -20,11 +20,11 @@ function RouteComponent() {
     <div className="flex min-h-svh">
       <AppNavbar />
       <div className="flex flex-1 flex-col pt-16">
-        <AppSidebar>
-          <div className="flex flex-1 flex-col gap-4 p-4">
-            <Outlet />
-          </div>
-        </AppSidebar>
+        {/* <AppSidebar> */}
+        <div className="flex flex-1 flex-col gap-4 p-4">
+          <Outlet />
+        </div>
+        {/* </AppSidebar> */}
       </div>
     </div>
   );
