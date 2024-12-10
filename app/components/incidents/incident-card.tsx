@@ -47,13 +47,13 @@ export function IncidentCard({ incident }: IncidentCardProps) {
           <div className="flex items-center gap-2">
             <Badge 
               variant="secondary" 
-              className={`${statusColors[incident.status]} capitalize px-3 py-1 shadow-sm`}
+              className={`${statusColors[incident.status]} capitalize px-3 py-1 shadow-sm pointer-events-none`}
             >
               {incident.status}
             </Badge>
             <Badge 
               variant="outline" 
-              className={`${severityColors[incident.severity]} capitalize px-3 py-1 border shadow-sm`}
+              className={`${severityColors[incident.severity]} capitalize px-3 py-1 border shadow-sm pointer-events-none`}
             >
               {incident.severity}
             </Badge>
@@ -63,7 +63,7 @@ export function IncidentCard({ incident }: IncidentCardProps) {
         {/* Content */}
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-accent-foreground">{incident.title}</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-2">{incident.title}</h3>
             <p className="text-muted-foreground">{incident.description}</p>
           </div>
 
