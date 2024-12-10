@@ -22,6 +22,9 @@ export default $config({
     const isPermanentStage = $app.stage === "production" || $app.stage === "development";
     // const workOSClientId = new sst.Secret(`WorkOSClientId`);
     // const workOSApiKey = new sst.Secret(`WorkOSApiKey`);
+    const slackClientId = new sst.Secret(`SlackClientId`);
+    const slackClientSecret = new sst.Secret(`SlackClientSecret`);
+    const slackSigningSecret = new sst.Secret(`SlackSigningSecret`);
     const clerkSecretKey = new sst.Secret(`ClerkSecretKey`);
     const config = new sst.Linkable("Config", {
       properties: {
@@ -52,7 +55,7 @@ export default $config({
           });
 
     const webApp = new sst.aws.TanstackStart(`Web`, {
-      link: [database, clerkSecretKey, config],
+      link: [database, clerkSecretKey, config, slackClientId, slackClientSecret, slackSigningSecret],
       vpc,
       dev: { command: "pnpm run dev:app" },
     });
@@ -60,7 +63,7 @@ export default $config({
     const runner = new sst.aws.Cron("StatusRunner", {
       job: {
         handler: "app/functions/run.ts",
-        link: [database],
+        link: [database, slackClientId, slackClientSecret, slackSigningSecret],
       },
       schedule: "rate(1 minute)",
     });

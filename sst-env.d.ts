@@ -22,6 +22,18 @@ declare module "sst" {
       "type": "sst.aws.Postgres"
       "username": string
     }
+    "SlackClientId": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "SlackClientSecret": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "SlackSigningSecret": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
     "VPC": {
       "bastion": string
       "type": "sst.aws.Vpc"

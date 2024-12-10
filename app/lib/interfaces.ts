@@ -23,3 +23,8 @@ export interface IService {
 
 export type StatusMessage = Omit<typeof StatusMessageTable.$inferSelect, "product" | "affectedServices">;
 export type ClassifiedMessage = typeof StatusMessageTable.$inferSelect;
+
+export type AlertConfiguration = {
+  product: string;
+  services: string[];
+};
