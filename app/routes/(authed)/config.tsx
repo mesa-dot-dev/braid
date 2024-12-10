@@ -229,18 +229,6 @@ function ConfigComponent() {
                       </Card>
                     </Collapsible>
                   ))}
-                  
-                  <Card className="overflow-hidden hover:bg-accent/50 transition-colors cursor-pointer">
-                    <CardHeader className="flex flex-row items-center justify-center p-6">
-                      <div className="flex flex-col items-center text-center">
-                        <Plus className="h-5 w-5 mb-2 text-muted-foreground" />
-                        <h3 className="text-xl font-semibold">Add a new service</h3>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          Configure a new service integration
-                        </p>
-                      </div>
-                    </CardHeader>
-                  </Card>
                 </div>
               </ScrollArea>
             </div>
