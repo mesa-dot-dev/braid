@@ -18,7 +18,7 @@ const mockIncidents: Incident[] = [
     title: "GitHub/Actions: Workflow Execution Delays",
     status: "resolved",
     severity: "major",
-    timestamp: new Date("2024-03-10T15:30:00"),
+    timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
     product: "GitHub",
     service: "Actions",
     description: "We observed elevated queue times and execution delays in GitHub Actions workflows.",
@@ -29,7 +29,7 @@ const mockIncidents: Incident[] = [
     title: "AWS/EC2: Instance Connectivity Issues",
     status: "investigating",
     severity: "critical",
-    timestamp: new Date("2024-03-10T16:45:00"),
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
     product: "AWS",
     service: "EC2",
     description: "Multiple EC2 instances in us-east-1 are experiencing connectivity issues.",
@@ -40,7 +40,7 @@ const mockIncidents: Incident[] = [
     title: "Cloudflare/API Gateway: Rate Limiting Issues",
     status: "monitoring",
     severity: "minor",
-    timestamp: new Date("2024-03-10T17:15:00"),
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24), // 24 hours ago
     product: "Cloudflare",
     service: "API Gateway",
     description: "Intermittent rate limiting issues affecting some API Gateway customers.",

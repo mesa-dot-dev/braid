@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Incident } from "@/types/incident";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 
 interface IncidentCardProps {
@@ -66,8 +66,9 @@ export function IncidentCard({ incident }: IncidentCardProps) {
           </div>
 
           {/* Timestamp */}
-          <div className="text-sm text-gray-500">
-            {formatDistanceToNow(incident.timestamp, { addSuffix: true })}
+          <div className="text-sm text-gray-500 flex flex-col gap-1">
+            <div>{formatDistanceToNow(incident.timestamp, { addSuffix: true })}</div>
+            <div>{format(incident.timestamp, 'MM-dd-yy \'at\' HH:mm')}</div>
           </div>
         </div>
       </div>
