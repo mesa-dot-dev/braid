@@ -11,6 +11,12 @@ import { Separator } from "@/components/ui/separator";
 import { Check, Filter } from "lucide-react";
 import { getStatusMessages } from "@/server/status";
 
+interface ServiceWithContext {
+  name: string;
+  product: string;
+  displayName: string; // Format: "Product - Service"
+}
+
 export const Route = createFileRoute("/(authed)/feed")({
   component: FeedComponent,
   loader: () => getStatusMessages(),
@@ -27,10 +33,26 @@ function FeedComponent() {
   // Extract unique products and services
   const { products, services } = useMemo(() => {
     const productsSet = new Set(messages.map(message => message.product));
-    const servicesSet = new Set(messages.flatMap(message => message.affectedServices));
+    
+    // Create services with product context
+    const servicesWithContext: ServiceWithContext[] = messages.flatMap(message =>
+      message.affectedServices.map(service => ({
+        name: service,
+        product: message.product,
+        displayName: `${message.product} - ${service}`
+      }))
+    );
+
+    // Remove duplicates by creating a Map with displayName as key
+    const uniqueServices = Array.from(
+      new Map(
+        servicesWithContext.map(service => [service.displayName, service])
+      ).values()
+    ).sort((a, b) => a.displayName.localeCompare(b.displayName));
+
     return {
       products: Array.from(productsSet),
-      services: Array.from(servicesSet)
+      services: uniqueServices
     };
   }, [messages]);
 
@@ -39,7 +61,9 @@ function FeedComponent() {
     return messages.filter(message => {
       const matchesProduct = selectedProducts.size === 0 || selectedProducts.has(message.product);
       const matchesService = selectedServices.size === 0 || 
-        message.affectedServices.some(service => selectedServices.has(service));
+        message.affectedServices.some(service => 
+          selectedServices.has(`${message.product} - ${service}`)
+        );
       const matchesSearch = searchQuery === "" || 
         message.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         message.content.toLowerCase().includes(searchQuery.toLowerCase());
@@ -51,7 +75,7 @@ function FeedComponent() {
   // Filter services based on search
   const filteredServices = useMemo(() => {
     return services.filter(service =>
-      service.toLowerCase().includes(serviceSearchQuery.toLowerCase())
+      service.displayName.toLowerCase().includes(serviceSearchQuery.toLowerCase())
     );
   }, [services, serviceSearchQuery]);
 
@@ -72,12 +96,12 @@ function FeedComponent() {
     setSelectedProducts(newSelected);
   };
 
-  const toggleService = (service: string) => {
+  const toggleService = (serviceDisplayName: string) => {
     const newSelected = new Set(selectedServices);
-    if (newSelected.has(service)) {
-      newSelected.delete(service);
+    if (newSelected.has(serviceDisplayName)) {
+      newSelected.delete(serviceDisplayName);
     } else {
-      newSelected.add(service);
+      newSelected.add(serviceDisplayName);
     }
     setSelectedServices(newSelected);
   };
@@ -92,12 +116,12 @@ function FeedComponent() {
               id: message.guid,
               title: message.title,
               description: message.content,
-              timestamp: message.pubDate,
+              timestamp: message.pubDate, // fallback to current date if invalid
               product: message.product,
               service: message.affectedServices[0] || 'Unknown',
-              status: 'monitoring', // You might want to add status to your schema
-              severity: 'major', // You might want to add severity to your schema
-              productIcon: '' // You might want to add icon to your schema
+              status: 'monitoring',
+              severity: 'major',
+              productIcon: ''
             }))} />
           </div>
 
@@ -165,14 +189,14 @@ function FeedComponent() {
                       <div className="p-2 space-y-1">
                         {filteredServices.map((service) => (
                           <button
-                            key={service}
-                            onClick={() => toggleService(service)}
+                            key={service.displayName}
+                            onClick={() => toggleService(service.displayName)}
                             className={`flex w-full items-center justify-between rounded-md px-2 py-1 text-sm transition-colors hover:bg-gray-100 hover:text-gray-900 ${
-                              selectedServices.has(service) ? 'bg-gray-100' : ''
+                              selectedServices.has(service.displayName) ? 'bg-gray-100' : ''
                             }`}
                           >
-                            {service}
-                            {selectedServices.has(service) && (
+                            {service.displayName}
+                            {selectedServices.has(service.displayName) && (
                               <Check className="h-4 w-4" />
                             )}
                           </button>
