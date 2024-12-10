@@ -30,7 +30,7 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/(authed)/config")({
   component: ConfigComponent,
-  loader: () => ({ breadcrumb: "Service Configuration" }),
+  loader: () => ({}),
 });
 
 // This would typically come from your API
@@ -118,7 +118,7 @@ function ConfigComponent() {
     <AppSidebar>
       <div className="min-h-screen bg-background">
         <AppNavbar />
-        <main className="mx-auto max-w-7xl p-4">
+        <main className="mx-auto max-w-7xl p-4 pt-20">
           <div className="space-y-6">
             <div>
               <h1 className="text-3xl font-bold tracking-tight">Service Configuration</h1>

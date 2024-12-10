@@ -50,7 +50,7 @@ const mockIncidents: Incident[] = [
 
 export const Route = createFileRoute("/(authed)/feed")({
   component: FeedComponent,
-  loader: () => ({ breadcrumb: "System Status" }),
+  loader: () => ({}),
 });
 
 function FeedComponent() {
