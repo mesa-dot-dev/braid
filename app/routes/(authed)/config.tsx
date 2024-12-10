@@ -3,20 +3,29 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Switch } from "@/components/ui/switch";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { 
+  ChevronDown, 
+  ChevronUp, 
+  Github, 
+  GitBranch, 
+  Globe, 
+  Package, 
+  Cloud,
+  Server,
+  Database,
+  FileCode
+} from "lucide-react";
 import { useState } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import { AppNavbar } from "@/components/app-navbar";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/(authed)/config")({
   component: ConfigComponent,
@@ -54,6 +63,13 @@ const services = [
 
 function ConfigComponent() {
   const [expandedServices, setExpandedServices] = useState<Set<string>>(new Set());
+  const [enabledProducts, setEnabledProducts] = useState<Set<string>>(new Set(
+    services.flatMap(service => 
+      service.products
+        .filter(product => product.enabled)
+        .map(product => `${service.id}-${product.id}`)
+    )
+  ));
 
   const toggleService = (serviceId: string) => {
     const newExpanded = new Set(expandedServices);
@@ -63,6 +79,38 @@ function ConfigComponent() {
       newExpanded.add(serviceId);
     }
     setExpandedServices(newExpanded);
+  };
+
+  const toggleProduct = (serviceId: string, productId: string) => {
+    const productKey = `${serviceId}-${productId}`;
+    const newEnabled = new Set(enabledProducts);
+    if (newEnabled.has(productKey)) {
+      newEnabled.delete(productKey);
+    } else {
+      newEnabled.add(productKey);
+    }
+    setEnabledProducts(newEnabled);
+  };
+
+  const getIconForProduct = (serviceId: string, productId: string) => {
+    if (serviceId === 'github') {
+      switch (productId) {
+        case 'actions': return <GitBranch className="h-5 w-5" />;
+        case 'api': return <Github className="h-5 w-5" />;
+        case 'pages': return <Globe className="h-5 w-5" />;
+        case 'packages': return <Package className="h-5 w-5" />;
+        default: return <Github className="h-5 w-5" />;
+      }
+    } else if (serviceId === 'aws') {
+      switch (productId) {
+        case 'ec2': return <Server className="h-5 w-5" />;
+        case 's3': return <Cloud className="h-5 w-5" />;
+        case 'lambda': return <FileCode className="h-5 w-5" />;
+        case 'rds': return <Database className="h-5 w-5" />;
+        default: return <Cloud className="h-5 w-5" />;
+      }
+    }
+    return <Cloud className="h-5 w-5" />;
   };
 
   return (
@@ -107,24 +155,25 @@ function ConfigComponent() {
                     
                     <CollapsibleContent>
                       <CardContent className="p-6 pt-0">
-                        <div className="space-y-4">
-                          {service.products.map((product) => (
-                            <div
-                              key={product.id}
-                              className="flex items-center justify-between rounded-lg border p-4"
-                            >
-                              <div className="space-y-1">
-                                <p className="font-medium">{product.name}</p>
-                              </div>
-                              <Switch
-                                checked={product.enabled}
-                                onCheckedChange={() => {
-                                  // Implement toggle logic here
-                                  console.log(`Toggled ${product.name}`);
-                                }}
-                              />
-                            </div>
-                          ))}
+                        <div className="grid grid-cols-4 gap-4">
+                          {service.products.map((product) => {
+                            const isEnabled = enabledProducts.has(`${service.id}-${product.id}`);
+                            return (
+                              <Button
+                                key={product.id}
+                                variant={isEnabled ? "default" : "outline"}
+                                className={cn(
+                                  "flex flex-col items-center justify-center gap-2 h-24 transition-[background-color] duration-75",
+                                  isEnabled && "bg-primary text-primary-foreground",
+                                  !isEnabled && "hover:bg-primary/10"
+                                )}
+                                onClick={() => toggleProduct(service.id, product.id)}
+                              >
+                                {getIconForProduct(service.id, product.id)}
+                                <span className="text-sm font-medium">{product.name}</span>
+                              </Button>
+                            );
+                          })}
                         </div>
                       </CardContent>
                     </CollapsibleContent>
