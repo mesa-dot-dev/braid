@@ -4,7 +4,7 @@ import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 export const Route = createFileRoute("/sign-in/$")({
   component: RouteComponent,
   beforeLoad: ({ context }) => {
-    if (context.userId) throw redirect({ to: "/" });
+    if (context.userId) throw redirect({ to: "/feed" });
   },
 });
 

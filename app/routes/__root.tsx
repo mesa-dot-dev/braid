@@ -5,9 +5,14 @@ import { getWebRequest } from "vinxi/http";
 import appCss from "@/app.css?url";
 import { ClerkProvider } from "@clerk/tanstack-start";
 import { getAuth } from "@clerk/tanstack-start/server";
+import { db } from "@/database/db";
+import { eq } from "drizzle-orm";
+import { UserTable } from "@/database/schema.sql";
 
 const getUser = createServerFn({ method: "GET" }).handler(async () => {
   const { userId } = await getAuth(getWebRequest());
+
+  // const [user] = userId ? await db.select().from(UserTable).where(eq(UserTable.id, userId!)) : [];
 
   return { userId };
 });

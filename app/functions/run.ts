@@ -1,7 +1,7 @@
 import { ConfigTable, SlackInstallationTable } from "@/database/schema.sql";
 import { db } from "@/database/db";
 import { eq, inArray, and, getTableColumns } from "drizzle-orm";
-import { getProducts } from "../../products";
+import { getFeeds } from "@/feeds";
 import { ClassifiedMessage } from "@/lib/interfaces";
 import { client } from "integrations/slack/client";
 
@@ -11,7 +11,7 @@ export async function handler() {
   // Fetch new messages from all services
   // Classify messages
   // Store messages in database
-  const products = await getProducts();
+  const products = await getFeeds();
   const newMessages = await products.reduce(
     async (acc, product) => {
       const messages = await product.refreshStatusMessages();
@@ -48,7 +48,7 @@ export async function handler() {
       );
       toNotify.forEach(async (installation) => {
         const response = await client.chat.postMessage({
-          token: installation.bot.token,
+          token: installation.botToken,
           channel: installation.incomingWebhook.channelId,
           text: message.content,
         });

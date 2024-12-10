@@ -1,7 +1,7 @@
 import { ProductFeed } from "@/lib/product";
 import { readdirSync } from "node:fs";
 
-export const getProducts = async (): Promise<ProductFeed[]> => {
+export const getFeeds = async (): Promise<ProductFeed[]> => {
   const products: ProductFeed[] = [];
   const path = require("path");
   for (const value of readdirSync(path.join(__dirname))) {
