@@ -57,6 +57,8 @@ function FeedComponent() {
   const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set());
   const [selectedServices, setSelectedServices] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
+  const [serviceSearchQuery, setServiceSearchQuery] = useState("");
+  const [productSearchQuery, setProductSearchQuery] = useState("");
 
   // Extract unique products and services
   const { products, services } = useMemo(() => {
@@ -80,6 +82,20 @@ function FeedComponent() {
       return matchesProduct && matchesService && matchesSearch;
     });
   }, [selectedProducts, selectedServices, searchQuery]);
+
+  // Filter services based on search
+  const filteredServices = useMemo(() => {
+    return services.filter(service =>
+      service.toLowerCase().includes(serviceSearchQuery.toLowerCase())
+    );
+  }, [services, serviceSearchQuery]);
+
+  // Add products filter
+  const filteredProducts = useMemo(() => {
+    return products.filter(product =>
+      product.toLowerCase().includes(productSearchQuery.toLowerCase())
+    );
+  }, [products, productSearchQuery]);
 
   const toggleProduct = (product: string) => {
     const newSelected = new Set(selectedProducts);
@@ -138,9 +154,15 @@ function FeedComponent() {
                     {/* Products */}
                     <div className="space-y-2">
                       <Label>Products</Label>
+                      <Input
+                        placeholder="Search products..."
+                        value={productSearchQuery}
+                        onChange={(e) => setProductSearchQuery(e.target.value)}
+                        className="mb-2"
+                      />
                       <ScrollArea className="h-[120px] rounded-md border">
                         <div className="p-2 space-y-1">
-                          {products.map((product) => (
+                          {filteredProducts.map((product) => (
                             <button
                               key={product}
                               onClick={() => toggleProduct(product)}
@@ -161,9 +183,15 @@ function FeedComponent() {
                     {/* Services */}
                     <div className="space-y-2">
                       <Label>Services</Label>
+                      <Input
+                        placeholder="Search services..."
+                        value={serviceSearchQuery}
+                        onChange={(e) => setServiceSearchQuery(e.target.value)}
+                        className="mb-2"
+                      />
                       <ScrollArea className="h-[120px] rounded-md border">
                         <div className="p-2 space-y-1">
-                          {services.map((service) => (
+                          {filteredServices.map((service) => (
                             <button
                               key={service}
                               onClick={() => toggleService(service)}
