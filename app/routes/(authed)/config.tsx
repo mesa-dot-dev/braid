@@ -118,7 +118,7 @@ function ConfigComponent() {
     <AppSidebar>
       <div className="min-h-screen bg-background">
         <AppNavbar />
-        <main className="mx-auto max-w-7xl p-4 pt-20">
+        <main className="container mx-auto p-4 pt-20">
           <div className="space-y-6">
             <div>
               <h1 className="text-3xl font-bold tracking-tight">Service Configuration</h1>
@@ -136,21 +136,23 @@ function ConfigComponent() {
                   onOpenChange={() => toggleService(service.id)}
                 >
                   <Card className="overflow-hidden">
-                    <CollapsibleTrigger className="w-full">
-                      <CardHeader className="flex flex-row items-center justify-between p-6">
-                        <div>
-                          <h3 className="text-xl font-semibold">{service.name}</h3>
-                          <p className="text-sm text-muted-foreground mt-1">
-                            {service.description}
-                          </p>
+                    <CollapsibleTrigger className="w-full text-left">
+                      <CardHeader className="p-6">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="text-xl font-semibold">{service.name}</h3>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {service.description}
+                            </p>
+                          </div>
+                          <Button variant="ghost" size="icon">
+                            {expandedServices.has(service.id) ? (
+                              <ChevronUp className="h-4 w-4" />
+                            ) : (
+                              <ChevronDown className="h-4 w-4" />
+                            )}
+                          </Button>
                         </div>
-                        <Button variant="ghost" size="icon">
-                          {expandedServices.has(service.id) ? (
-                            <ChevronUp className="h-4 w-4" />
-                          ) : (
-                            <ChevronDown className="h-4 w-4" />
-                          )}
-                        </Button>
                       </CardHeader>
                     </CollapsibleTrigger>
                     
@@ -164,14 +166,14 @@ function ConfigComponent() {
                                 key={product.id}
                                 variant={isEnabled ? "default" : "outline"}
                                 className={cn(
-                                  "flex flex-col items-center justify-center gap-2 h-24 transition-[background-color] duration-75",
+                                  "flex flex-col items-center justify-center gap-2 h-24 w-full transition-[background-color] duration-75",
                                   isEnabled && "bg-primary text-primary-foreground",
                                   !isEnabled && "hover:bg-primary/10"
                                 )}
                                 onClick={() => toggleProduct(service.id, product.id)}
                               >
                                 {getIconForProduct(service.id, product.id)}
-                                <span className="text-sm font-medium">{product.name}</span>
+                                <span className="text-sm font-medium text-center">{product.name}</span>
                               </Button>
                             );
                           })}
