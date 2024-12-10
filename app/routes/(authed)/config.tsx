@@ -30,6 +30,7 @@ import { AppNavbar } from "@/components/app-navbar";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 
 export const Route = createFileRoute("/(authed)/config")({
   component: ConfigComponent,
@@ -210,8 +211,8 @@ function ConfigComponent() {
                                   <button
                                     key={product.id}
                                     className={cn(
-                                      "w-full px-6 py-4 flex items-center justify-between hover:bg-accent/5 transition-colors",
-                                      isEnabled && "bg-accent/10"
+                                      "w-full px-6 py-4 flex items-center justify-between hover:bg-secondary/50 transition-colors",
+                                      isEnabled && "bg-secondary"
                                     )}
                                     onClick={() => toggleProduct(service.id, product.id)}
                                   >
@@ -219,7 +220,14 @@ function ConfigComponent() {
                                       {getIconForProduct(service.id, product.id)}
                                       <span className="font-medium">{product.name}</span>
                                     </div>
-                                    {isEnabled && <Check className="h-4 w-4 text-accent" />}
+                                    <div className="flex items-center gap-2">
+                                      <Switch 
+                                        checked={isEnabled}
+                                        onCheckedChange={() => toggleProduct(service.id, product.id)}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="data-[state=checked]:bg-primary"
+                                      />
+                                    </div>
                                   </button>
                                 );
                               })}
