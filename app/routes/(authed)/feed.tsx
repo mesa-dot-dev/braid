@@ -119,9 +119,9 @@ function FeedComponent() {
 
   return (
     <AppSidebar>
-      <div className="min-h-screen bg-background">
+      <div className="bg-background">
         <AppNavbar />
-        <main className="mx-auto max-w-7xl p-4">
+        <main className="mt-14 mx-auto max-w-7xl p-4">
           <div className="flex gap-8">
             {/* Incident Feed */}
             <div className="flex-1">
