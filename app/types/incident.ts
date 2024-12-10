@@ -1,9 +1,11 @@
 export type Incident = {
   id: string;
   title: string;
-  status: "investigating" | "identified" | "monitoring" | "resolved";
+  status: "investigating" | "monitoring" | "resolved";
   severity: "critical" | "major" | "minor";
   timestamp: Date;
-  service: "GitHub" | "AWS" | "Cloudflare";
+  product: string;
+  service: string;
   description: string;
+  productIcon?: string;
 }; 
