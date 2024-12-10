@@ -24,15 +24,7 @@ declare module "sst" {
     }
     "SlackClientId": {
       "type": "sst.sst.Secret"
-      "value": string
-    }
-    "SlackClientSecret": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "SlackSigningSecret": {
-      "type": "sst.sst.Secret"
-      "value": string
+      "value": any
     }
     "VPC": {
       "bastion": string
