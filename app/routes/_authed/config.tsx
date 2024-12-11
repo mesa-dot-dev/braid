@@ -30,43 +30,44 @@ import { eq, getTableColumns, sql, and } from "drizzle-orm";
 import { db } from "@/database/db";
 import { ConfigTable, SlackInstallationTable } from "@/database/schema.sql";
 import { useQuery } from "@tanstack/react-query";
+import { trpc } from "@/lib/trpc";
 
-const feeds = createServerFn({ method: "GET" })
-  .validator(z.object({ teamId: z.string() }))
-  .handler(async ({ data }) => {
-    // const { userId } = await getAuth(getWebRequest());
-    // const clerk = await clerkClient({
-    //   secretKey: Resource.ClerkSecretKey.value,
-    // });
-    // const accessTokens = (await clerk.users.getUserOauthAccessToken(userId!, "oauth_slack")).data;
-    // const token = accessTokens[0].token || "";
-    // const userInfo = await client.openid.connect.userInfo({
-    //   token,
-    // });
-    const teamConfigs = await db
-      .select({ ...getTableColumns(ConfigTable), teamId: SlackInstallationTable.teamId })
-      .from(ConfigTable)
-      .innerJoin(SlackInstallationTable, eq(ConfigTable.installationId, SlackInstallationTable.id))
-      .where(eq(SlackInstallationTable.teamId, data.teamId));
-    const products = await getFeeds();
-    const services = await products.reduce(
-      async (acc, product) => {
-        const services = await product.getServices();
-        return {
-          ...(await acc),
-          [product.name]: services,
-        };
-      },
-      Promise.resolve({} as Record<string, IService[]>),
-    );
-    const productsWithServices = products.map((product) => ({
-      name: product.name,
-      displayName: product.displayName,
-      logo: product.logo,
-      services: services[product.name],
-    }));
-    return { products: productsWithServices, teamConfigs };
-  });
+// const feeds = createServerFn({ method: "GET" })
+//   .validator(z.object({ teamId: z.string() }))
+//   .handler(async ({ data }) => {
+//     // const { userId } = await getAuth(getWebRequest());
+//     // const clerk = await clerkClient({
+//     //   secretKey: Resource.ClerkSecretKey.value,
+//     // });
+//     // const accessTokens = (await clerk.users.getUserOauthAccessToken(userId!, "oauth_slack")).data;
+//     // const token = accessTokens[0].token || "";
+//     // const userInfo = await client.openid.connect.userInfo({
+//     //   token,
+//     // });
+//     const teamConfigs = await db
+//       .select({ ...getTableColumns(ConfigTable), teamId: SlackInstallationTable.teamId })
+//       .from(ConfigTable)
+//       .innerJoin(SlackInstallationTable, eq(ConfigTable.installationId, SlackInstallationTable.id))
+//       .where(eq(SlackInstallationTable.teamId, data.teamId));
+//     const products = await getFeeds();
+//     const services = await products.reduce(
+//       async (acc, product) => {
+//         const services = await product.getServices();
+//         return {
+//           ...(await acc),
+//           [product.name]: services,
+//         };
+//       },
+//       Promise.resolve({} as Record<string, IService[]>),
+//     );
+//     const productsWithServices = products.map((product) => ({
+//       name: product.name,
+//       displayName: product.displayName,
+//       logo: product.logo,
+//       services: services[product.name],
+//     }));
+//     return { products: productsWithServices, teamConfigs };
+//   });
 
 const toggleService = createServerFn({ method: "POST" })
   .validator(z.object({ product: z.string(), service: z.string(), installationId: z.number() }))
@@ -104,7 +105,7 @@ const toggleService = createServerFn({ method: "POST" })
 
 export const Route = createFileRoute("/_authed/config")({
   component: ConfigComponent,
-  loader: ({ context }) => feeds({ data: { teamId: context.teamId } }),
+  loader: ({ context }) => ({ teamId: context.teamId }),
 });
 
 // This would typically come from your API
@@ -137,7 +138,9 @@ export const Route = createFileRoute("/_authed/config")({
 // ];
 
 function ConfigComponent() {
-  const { products, teamConfigs } = Route.useLoaderData();
+  // const { products, teamConfigs } = Route.useLoaderData();
+  const { teamId } = Route.useLoaderData();
+  const configQuery = trpc.getFeedsAndConfigs.useQuery({ teamId });
   const [expandedProducts, setExpandedProducts] = useState<Set<string>>(new Set());
   const [enabledServices, setEnabledServices] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
@@ -155,13 +158,13 @@ function ConfigComponent() {
 
   const toggleService = (productId: string, serviceId: string) => {
     const productKey = `${productId}-${serviceId}`;
-    const newEnabled = new Set(enabledProducts);
-    if (newEnabled.has(productKey)) {
-      newEnabled.delete(productKey);
-    } else {
-      newEnabled.add(productKey);
-    }
-    setEnabledProducts(newEnabled);
+    // const newEnabled = new Set(enabledProducts);
+    // if (newEnabled.has(productKey)) {
+    //   newEnabled.delete(productKey);
+    // } else {
+    //   newEnabled.add(productKey);
+    // }
+    // setEnabledProducts(newEnabled);
   };
 
   const getIconForProduct = (productId: string, serviceId: string) => {
@@ -195,6 +198,7 @@ function ConfigComponent() {
     return <Cloud className="h-5 w-5" />;
   };
 
+  const products = useMemo(() => configQuery.data?.products || [], [configQuery.data]);
   const filteredProducts = useMemo(
     () =>
       products.filter(

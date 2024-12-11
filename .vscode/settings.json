@@ -11,7 +11,7 @@
     "**/.vercel": true,
     "**/out": true,
     "**/build": true,
-    "**/node_modules": true,
+    "**/node_modules": false,
     "pnpm-lock.yaml": false,
     "postcss.config.js": true,
     ".prettierrc": true,

@@ -61,8 +61,15 @@ export default $config({
     //   },
     // });
 
-    const webApp = new sst.aws.TanstackStart(`Web`, {
+    const trpc = new sst.aws.Function(`Trpc`, {
+      handler: "./app/server/index.handler",
       link: [database, clerkSecretKey, config, slackClientId, slackClientSecret, slackSigningSecret],
+      vpc,
+      url: true,
+    });
+
+    const webApp = new sst.aws.TanstackStart(`Web`, {
+      link: [database, trpc, clerkSecretKey, config, slackClientId, slackClientSecret, slackSigningSecret],
       vpc,
       dev: { command: "pnpm run dev:app" },
     });

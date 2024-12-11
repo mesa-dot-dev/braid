@@ -1,4 +1,4 @@
-import type { QueryClient } from "@tanstack/react-query";
+import { QueryClientProvider, type QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, Outlet, ScrollRestoration } from "@tanstack/react-router";
 import { createServerFn, Meta, Scripts } from "@tanstack/start";
 import { getWebRequest } from "vinxi/http";
@@ -8,6 +8,7 @@ import { getAuth } from "@clerk/tanstack-start/server";
 import { db } from "@/database/db";
 import { eq } from "drizzle-orm";
 import { UserTable } from "@/database/schema.sql";
+import { trpc, api } from "@/lib/trpc";
 
 const getUser = createServerFn({ method: "GET" }).handler(async () => {
   const { userId } = await getAuth(getWebRequest());
@@ -32,22 +33,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   ],
   component: RootComponent,
   beforeLoad: async () => await getUser(),
+  loader: ({ context }) => ({ queryClient: context.queryClient }),
   links: () => [{ rel: "stylesheet", href: appCss }],
 });
 
 function RootComponent() {
+  const { queryClient } = Route.useLoaderData();
   return (
-    <ClerkProvider>
-      <html>
-        <head>
-          <Meta />
-        </head>
-        <body>
-          <Outlet />
-          <ScrollRestoration />
-          <Scripts />
-        </body>
-      </html>
-    </ClerkProvider>
+    <trpc.Provider client={api} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <ClerkProvider>
+          <html>
+            <head>
+              <Meta />
+            </head>
+            <body>
+              <Outlet />
+              <ScrollRestoration />
+              <Scripts />
+            </body>
+          </html>
+        </ClerkProvider>
+      </QueryClientProvider>
+    </trpc.Provider>
   );
 }

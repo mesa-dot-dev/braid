@@ -39,6 +39,11 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
+    "Trpc": {
+      "name": string
+      "type": "sst.aws.Function"
+      "url": string
+    }
     "VPC": {
       "bastion": string
       "type": "sst.aws.Vpc"
